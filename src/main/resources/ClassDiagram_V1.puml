@@ -2,6 +2,7 @@
 'https://plantuml.com/class-diagram
 
 package entities {
+    note "All classes will need\ngetters and setters\nfor all their attributes" as N1
     class Activities {
      - id: int
      - name: String
@@ -9,11 +10,15 @@ package entities {
      - persons: List<Person>
      - address: Address
      - date: Date
+     + getters()
+     + setters()
     }
     class ChatGroup {
          - id: int
          - hobby: Hobby
          - persons: List<Person>
+         + getters()
+         + setters()
         }
     class Person {
      - id: int
@@ -21,23 +26,38 @@ package entities {
      - firstName: String
      - lastName: String
      - hobby: List<Hobby>
-
+     - activities: List<Activities>
+     + getters()
+     + setters()
+     + showSchedule(): String
+     + getDistanceToActivities(): String
     }
-    class Hobby {
+    note right of Person: "showSchedule returns a \nstring of the date/time, name\nand hobby of all activities"
+    note "getDistanceToActivities() returns a \nstring with the distances between the\npersons address and the addresses of \nthe various activities" as n2
+        class Hobby {
      - name: String
      - description: String
+     + getters()
+     + setters()
     }
     class Phone {
      - number: String
      - description: String
+     + getters()
+     + setters()
     }
     class Address {
      - Street: String
      - AdditionalInfo: String
+     + getters()
+     + setters()
+     + getDistanceTo(Address): String
     }
     class CityInfo {
      - zipCode: String
      - city: String
+     + getters()
+     + setters()
     }
 
 }
@@ -53,6 +73,8 @@ Activities o-- Hobby
 Activities o-- Address
 ChatGroup o-- Person
 ChatGroup o-- Hobby
+
+Person ... n2
 
 
 @enduml
