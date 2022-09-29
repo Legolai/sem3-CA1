@@ -1,0 +1,100 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package entities {
+    note "All classes will need\ngetters and setters\nfor all their attributes" as N1
+    note "The possibleFutureFunctionality package\nwill only be implemented if there's enough time" as N3
+    package possibleFutureFunctionality {
+        class Activities {
+         - id: int
+         - name: String
+         - hobby: Hobby
+         - persons: List<Person>
+         - address: Address
+         - date: Date
+         + getters()
+         + setters()
+        }
+        class ChatGroup {
+         - id: int
+         - hobby: Hobby
+         - persons: List<Person>
+         + getters()
+         + setters()
+        }
+    }
+    class Hobby {
+     - id: int
+     - name: String
+     - description: String
+     - category: String
+     - type: String
+     - persons: List<Person>
+     + getters()
+     + setters()
+    }
+    package PersonInfo {
+        class Person {
+         - id: int
+         - email: String
+         - firstName: String
+         - lastName: String
+         - phones: List<Phone>
+         - address: Address
+         - hobbies: List<Hobby>
+         - activities: List<Activities>
+         - chatgroups: List<ChatGroup>
+         + getters()
+         + setters()
+         + showSchedule(): String
+         + getDistanceToActivities(): String
+        }
+        note right of Person: "showSchedule returns a \nstring of the date/time, name\nand hobby of all activities"
+        note "getDistanceToActivities() returns a \nstring with the distances between the\npersons address and the addresses of \nthe various activities" as n2
+        class Phone {
+         - number: String
+         - description: String
+         - person: Person
+         + getters()
+         + setters()
+        }
+    }
+
+    package Address {
+        class Address {
+         - id: int
+         - street: String
+         - additionalInfo: String
+         - persons: List<Person>
+         - cityInfo: CityInfo
+         + getters()
+         + setters()
+         + getDistanceTo(Address): String
+        }
+        class CityInfo {
+         - zipCode: String
+         - city: String
+         - addresses: List<Address>
+         + getters()
+         + setters()
+        }
+    }
+
+}
+
+
+
+Person o-- Hobby
+Person *-- Phone
+Person o-- Address
+Address o-- CityInfo
+Activities o-- Person
+Activities o-- Address
+Activities o-- Hobby
+ChatGroup o-- Person
+ChatGroup o-- Hobby
+
+Person ... n2
+
+
+@enduml
