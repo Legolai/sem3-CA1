@@ -1,5 +1,6 @@
 package datafacades;
 
+import entities.Address;
 import entities.CityInfo;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
@@ -9,16 +10,16 @@ import javax.persistence.EntityManagerFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CityInfoFacadeTest {
+class AddressFacadeTest {
 
     private static EntityManagerFactory emf;
-    private static CityInfoFacade facade;
-    CityInfo ci1, ci2, ci3;
+    private static AddressFacade facade;
+    Address a1, a2;
 
     @BeforeAll
     public static void setUpClass() {
         emf = EMF_Creator.createEntityManagerFactoryForTest();
-        facade = CityInfoFacade.getInstance(emf);
+        facade = AddressFacade.getInstance(emf);
     }
     @AfterAll
     public static void tearDownClass() {
@@ -32,12 +33,16 @@ class CityInfoFacadeTest {
             em.getTransaction().begin();
             em.createNamedQuery("Address.deleteAllRows").executeUpdate();
             em.createNamedQuery("CityInfo.deleteAllRows").executeUpdate();
-            ci1 = new CityInfo("0877", "København C");
-            ci2 = new CityInfo("0800","Høje Taastrup");
-            ci3 = new CityInfo("0899","Kommuneservice");
+            CityInfo ci1 = new CityInfo("2860","Soeborg");
+            CityInfo ci2 = new CityInfo("2610","Roedovre");
+            CityInfo ci3 = new CityInfo("2900","Hellerup");
             em.persist(ci1);
             em.persist(ci2);
             em.persist(ci3);
+            a1 = new Address("Mørkhøj Parkalle 12d", null, null, ci1);
+            a2 = new Address("Kaffevej 47", "4", "tv", ci2);
+            em.persist(a1);
+            em.persist(a2);
             em.getTransaction().commit();
         } finally {
             em.close();
@@ -47,54 +52,56 @@ class CityInfoFacadeTest {
     void tearDown() {
     }
 
-
     @Test
     void create() {
-        System.out.println("Testing create(CityInfo cityInfo)");
-        CityInfo cityInfo = new CityInfo("4030","Tune");
-        CityInfo expected = cityInfo;
-        CityInfo actual = facade.create(cityInfo);
+        System.out.println("Testing create(Address address)");
+        Address address = new Address("Tuborgvej 122", null, null, new CityInfo("2900","Hellerup"));
+        Address expected = address;
+        Address actual = facade.create(address);
         assertEquals(expected, actual);
     }
 
     @Test
-    void testCreateWithParameters() {
-        System.out.println("Testing create(String zipCode, String city)");
-        CityInfo expected = new CityInfo("4030","Tune");
-        CityInfo actual = facade.create("4030","Tune");
-        assertEquals(expected, actual);
+    void testCreate() {
+        System.out.println("Testing create(String street, String floor, String door, CityInfo cityinfoZipcode)");
+        Address expected = new Address("Tuborgvej 122", null, null, new CityInfo("2900","Hellerup"));
+        Address actual = facade.create("Tuborgvej 122", null, null, new CityInfo("2900","Hellerup"));
+        assertEquals(expected.getStreet(), actual.getStreet());
+        assertEquals(expected.getFloor(), actual.getFloor());
+        assertEquals(expected.getDoor(), actual.getDoor());
+        assertEquals(expected.getCityinfoZipcode(), actual.getCityinfoZipcode());
     }
 
     @Test
     void getById() {
         System.out.println("Testing getbyid(id)");
-        CityInfo expected = ci1;
-        CityInfo actual = facade.getById(ci1.getZipCode());
+        Address expected = a1;
+        Address actual = facade.getById(a1.getId());
         assertEquals(expected, actual);
     }
 
     @Test
     void getAll() {
         System.out.println("Testing getAll()");
-        int expected = 3;
+        int expected = 2;
         int actual = facade.getAll().size();
         assertEquals(expected,actual);
     }
 
     @Test
     void update() {
-        System.out.println("Testing Update(CityInfo cityInfo)");
-        ci2.setCity("updated city");
-        CityInfo expected = ci2;
-        CityInfo actual = facade.update(ci2);
+        System.out.println("Testing Update(Address address)");
+        a2.setDoor("updated city");
+        Address expected = a2;
+        Address actual = facade.update(a2);
         assertEquals(expected,actual);
     }
 
     @Test
     void delete() {
         System.out.println("Testing delete(id)");
-        facade.delete(ci3.getZipCode());
-        int expected = 2;
+        facade.delete(a2.getId());
+        int expected = 1;
         int actual = facade.getAll().size();
         assertEquals(expected, actual);
     }
