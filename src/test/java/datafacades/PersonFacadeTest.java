@@ -119,4 +119,16 @@ class PersonFacadeTest {
         phone.setDescription("mobil");
         Person person = facade.create("Hansen@email.com", "Hans", "Hansen", new Address("Strandvejen 42", null, null, new CityInfo("4000", "Helsingør")), Set.of(phone), List.of("Skuespil", "Akrobatik"));
     }
+
+    @Test
+    void testShouldGetAllPersonsByHobbyName() {
+        Phone phone = new Phone();
+        phone.setNumber("40993550");
+        phone.setDescription("mobil");
+        facade.create("Hansen@email.com", "Hans", "Hansen", new Address("Strandvejen 42", null, null, new CityInfo("4000", "Helsingør")), Set.of(phone), List.of("Skuespil", "Akrobatik"));
+
+        List<Person> people = facade.getAllByHobby("Skuespil");
+
+        assertEquals(2, people.size());
+    }
 }

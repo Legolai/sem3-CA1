@@ -80,6 +80,13 @@ public class PersonFacade implements IDataFacade<Person> {
         });
     }
 
+    public List<Person> getAllByHobby(String hobbyName) {
+        return executeWithClose(em -> {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobbies h where h.name = :hobby", Person.class);
+            query.setParameter("hobby", hobbyName);
+            return query.getResultList();
+        });
+    }
 
     public List<Person> getAllByCityInfo(CityInfo cityInfo) {
         return executeWithClose(em -> {
