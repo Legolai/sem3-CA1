@@ -1,26 +1,34 @@
 package entities;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Phone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "number", nullable = false, length = 45)
-    private String id;
-
+    private String number;
     @Column(name = "description", length = 45)
     private String description;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "Person_id", nullable = false)
     private Person person;
 
-    public String getId() {
-        return id;
+    public Phone() {
+
     }
-    public void setId(String id) {
-        this.id = id;
+    public Phone(String id, String description, Person person) {
+        this.number = id;
+        this.description = description;
+        this.person = person;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+    public void setNumber(String id) {
+        this.number = id;
     }
 
     public String getDescription() {
@@ -37,4 +45,19 @@ public class Phone {
         this.person = person;
     }
 
+    @Override
+    public String toString() {
+        return "Phone{" + "number='" + number + '\'' + ", description='" + description + '\'' + ", person=" + person + '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Phone phone = (Phone) o;
+        return number.equals(phone.number);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(number);
+    }
 }

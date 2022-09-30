@@ -3,21 +3,29 @@ package entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class CityInfo {
     @Id
     @Column(name = "zipCode", nullable = false)
-    private Integer id;
-
+    private Integer zipCode;
     @Column(name = "city", nullable = false, length = 45)
     private String city;
 
-    public Integer getId() {
-        return id;
+    public CityInfo() {
+
     }
-    public void setId(Integer id) {
-        this.id = id;
+    public CityInfo(Integer id, String city) {
+        this.zipCode = id;
+        this.city = city;
+    }
+
+    public Integer getZipCode() {
+        return zipCode;
+    }
+    public void setZipCode(Integer id) {
+        this.zipCode = id;
     }
 
     public String getCity() {
@@ -27,4 +35,19 @@ public class CityInfo {
         this.city = city;
     }
 
+    @Override
+    public String toString() {
+        return "CityInfo{" + "id=" + zipCode + ", city='" + city + '\'' + '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CityInfo cityInfo = (CityInfo) o;
+        return zipCode.equals(cityInfo.zipCode);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(zipCode);
+    }
 }

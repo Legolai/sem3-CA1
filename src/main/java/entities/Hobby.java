@@ -2,44 +2,41 @@ package entities;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 public class Hobby {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
-
     @Column(name = "name", nullable = false, length = 45)
     private String name;
-
     @Column(name = "description", nullable = false, length = 45)
     private String description;
-
     @Column(name = "category", nullable = false, length = 45)
     private String category;
-
     @Column(name = "type", nullable = false, length = 45)
     private String type;
-
     @ManyToMany
-    @JoinTable(name = "Person_has_Hobby", joinColumns = @JoinColumn(name = "Hobby_id"), inverseJoinColumns = @JoinColumn(name = "Person_id"))
+    @JoinTable(name = "Person_has_Hobby", joinColumns = @JoinColumn(name = "Hobby_name"), inverseJoinColumns = @JoinColumn(name = "Person_id"))
     private Set<Person> people = new LinkedHashSet<>();
 
-    public Integer getId() {
-        return id;
-    }
+    public Hobby() {
 
-    public void setId(Integer id) {
-        this.id = id;
+    }
+    public Hobby(String id, String description, String category, String type, Set<Person> people) {
+        this.name = id;
+        this.description = description;
+        this.category = category;
+        this.type = type;
+        this.people = people;
     }
 
     public String getName() {
         return name;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String id) {
+        this.name = id;
     }
 
     public String getDescription() {
@@ -70,5 +67,19 @@ public class Hobby {
         this.people = people;
     }
 
-
+    @Override
+    public String toString() {
+        return "Hobby{" + "id='" + name + '\'' + ", description='" + description + '\'' + ", category='" + category + '\'' + ", type='" + type + '\'' + ", people=" + people + '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Hobby hobby = (Hobby) o;
+        return name.equals(hobby.name);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 }

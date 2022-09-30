@@ -2,6 +2,7 @@ package entities;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -10,23 +11,32 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-
     @Column(name = "email", nullable = false, length = 45)
     private String email;
-
     @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
-
     @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "Address_id", nullable = false)
     private Address address;
-
+    @OneToMany(mappedBy = "person")
+    private Set<Phone> phones = new LinkedHashSet<>();
     @ManyToMany
-    @JoinTable(name = "Person_has_Hobby", joinColumns = @JoinColumn(name = "Person_id"), inverseJoinColumns = @JoinColumn(name = "Hobby_id"))
+    @JoinTable(name = "Person_has_Hobby", joinColumns = @JoinColumn(name = "Person_id"), inverseJoinColumns = @JoinColumn(name = "Hobby_name"))
     private Set<Hobby> hobbies = new LinkedHashSet<>();
+
+    public Person() {
+
+    }
+    public Person(String email, String firstName, String lastName, Address address, Set<Phone> phones, Set<Hobby> hobbies) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.phones = phones;
+        this.hobbies = hobbies;
+    }
 
     public Integer getId() {
         return id;
@@ -63,6 +73,13 @@ public class Person {
         this.address = address;
     }
 
+    public Set<Phone> getPhones() {
+        return phones;
+    }
+    public void setPhones(Set<Phone> phones) {
+        this.phones = phones;
+    }
+
     public Set<Hobby> getHobbies() {
         return hobbies;
     }
@@ -70,4 +87,19 @@ public class Person {
         this.hobbies = hobbies;
     }
 
+    @Override
+    public String toString() {
+        return "Person{" + "id=" + id + ", email='" + email + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", address=" + address + ", phones=" + phones + ", hobbies=" + hobbies + '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return id.equals(person.id);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
