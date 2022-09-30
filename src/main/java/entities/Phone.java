@@ -6,7 +6,6 @@ import java.util.Objects;
 @Entity
 public class Phone {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "number", nullable = false, length = 45)
     private String number;
     @Column(name = "description", length = 45)

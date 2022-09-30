@@ -17,7 +17,6 @@ public interface IDataFacade<T> {
     T update(T t); // throws EntityNotFoundException;
     <P> void delete(P p); // throws EntityNotFoundException;
 
-
     default  <R> R executeWithClose(Function<EntityManager, R> action) {
         EntityManager em = getEntityManager();
         R result = action.apply(em);
