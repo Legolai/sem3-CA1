@@ -17,10 +17,10 @@ public class Person {
     private String firstName;
     @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "Address_id", nullable = false)
     private Address address;
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private Set<Phone> phones = new LinkedHashSet<>();
     @ManyToMany
     @JoinTable(name = "Person_has_Hobby", joinColumns = @JoinColumn(name = "Person_id"), inverseJoinColumns = @JoinColumn(name = "Hobby_name"))
@@ -75,6 +75,10 @@ public class Person {
 
     public Set<Phone> getPhones() {
         return phones;
+    }
+
+    public void assignPhone(Phone phone) {
+        this.phones.add(phone);
     }
     public void setPhones(Set<Phone> phones) {
         this.phones = phones;

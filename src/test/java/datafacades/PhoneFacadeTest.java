@@ -10,6 +10,10 @@ import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PhoneFacadeTest {
@@ -29,16 +33,27 @@ class PhoneFacadeTest {
     @BeforeEach
     void setUp() {
         EntityManager em = emf.createEntityManager();
-        person = new Person(1, "foo@bar.com", "foo", "bar", new Address("foovej 1", "0", "mf", new CityInfo("0231", "foocity")))
-        p1 = new Phone("12345678", "mobile", 1);
-        p2 = new Phone("87654321", "landline phone", 1);
-        p3 = new Phone("32423423", "Telefone", 1);
+        CityInfo cityInfo = new CityInfo("1234", "foo");
+        Address address = new Address("foovej 1", "0", "mf", cityInfo);
+        person = new Person(
+                "foo@bar.com",
+                "foo",
+                "bar",
+                address,
+                new LinkedHashSet<Phone>(),
+                new LinkedHashSet<Hobby>()
+                );
+        p1 = new Phone("12345678", "mobile", person);
+        p2 = new Phone("87654321", "landline phone", person);
+        p3 = new Phone("32423423", "Telefon", person);
+        person.assignPhone(p1);
+        person.assignPhone(p2);
+        person.assignPhone(p3);
         try {
             em.getTransaction().begin();
             em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
-            em.persist("12345678", "mobile", 1);
-            em.persist("87654321", "landline phone", 1);
-            em.persist("32423423", "Telefone", 1);
+            em.persist(cityInfo);
+            em.persist(person);
 
             em.getTransaction().commit();
         } finally {
@@ -52,6 +67,7 @@ class PhoneFacadeTest {
 
     @Test
     void create() {
+
     }
 
     @Test
@@ -59,7 +75,12 @@ class PhoneFacadeTest {
     }
 
     @Test
-    void getAll() {
+    void shouldGetAllPhones() {
+        System.out.println("getting all phones");
+        int actual =  facade.getAll().size();
+        int expected = 3;
+        System.out.println("comparing actual: " + actual + " with expected: " +expected);
+        assertEquals(expected, actual);
     }
 
     @Test
