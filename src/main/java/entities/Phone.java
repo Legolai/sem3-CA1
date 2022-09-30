@@ -6,7 +6,6 @@ import java.util.Objects;
 @Entity
 public class Phone {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "number", nullable = false, length = 45)
     private String number;
     @Column(name = "description", length = 45)
@@ -18,8 +17,8 @@ public class Phone {
     public Phone() {
 
     }
-    public Phone(String id, String description, Person person) {
-        this.number = id;
+    public Phone(String number, String description, Person person) {
+        this.number = number;
         this.description = description;
         this.person = person;
     }
@@ -27,8 +26,8 @@ public class Phone {
     public String getNumber() {
         return number;
     }
-    public void setNumber(String id) {
-        this.number = id;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getDescription() {
