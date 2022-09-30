@@ -12,10 +12,10 @@ public interface IDataFacade<T> {
     EntityManager getEntityManager();
 
     T create(T t);
-    T getById(int id); //throws EntityNotFoundException;
+    <P> T getById(P p); //throws EntityNotFoundException;
     List<T> getAll();
     T update(T t); // throws EntityNotFoundException;
-    T delete(int id); // throws EntityNotFoundException;
+    <P> void delete(P p); // throws EntityNotFoundException;
 
 
     default  <R> R executeWithClose(Function<EntityManager, R> action) {
