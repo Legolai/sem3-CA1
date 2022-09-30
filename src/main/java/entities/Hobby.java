@@ -8,7 +8,6 @@ import java.util.Set;
 @Entity
 public class Hobby {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "name", nullable = false, length = 45)
     private String name;
     @Column(name = "description", nullable = false, length = 45)
@@ -24,8 +23,8 @@ public class Hobby {
     public Hobby() {
 
     }
-    public Hobby(String id, String description, String category, String type, Set<Person> people) {
-        this.name = id;
+    public Hobby(String name, String description, String category, String type, Set<Person> people) {
+        this.name = name;
         this.description = description;
         this.category = category;
         this.type = type;
@@ -35,8 +34,8 @@ public class Hobby {
     public String getName() {
         return name;
     }
-    public void setName(String id) {
-        this.name = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -69,7 +68,7 @@ public class Hobby {
 
     @Override
     public String toString() {
-        return "Hobby{" + "id='" + name + '\'' + ", description='" + description + '\'' + ", category='" + category + '\'' + ", type='" + type + '\'' + ", people=" + people + '}';
+        return "Hobby{" + "name='" + name + '\'' + ", description='" + description + '\'' + ", category='" + category + '\'' + ", type='" + type + '\'' + ", people=" + people + '}';
     }
     @Override
     public boolean equals(Object o) {

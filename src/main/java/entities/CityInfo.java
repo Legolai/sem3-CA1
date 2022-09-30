@@ -3,28 +3,30 @@ package entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import java.util.Objects;
 
 @Entity
+@NamedQuery(name = "CityInfo.deleteAllRows", query = "DELETE from CityInfo")
 public class CityInfo {
     @Id
     @Column(name = "zipCode", nullable = false)
-    private Integer zipCode;
+    private String zipCode;
     @Column(name = "city", nullable = false, length = 45)
     private String city;
 
     public CityInfo() {
 
     }
-    public CityInfo(Integer id, String city) {
+    public CityInfo(String id, String city) {
         this.zipCode = id;
         this.city = city;
     }
 
-    public Integer getZipCode() {
+    public String getZipCode() {
         return zipCode;
     }
-    public void setZipCode(Integer id) {
+    public void setZipCode(String id) {
         this.zipCode = id;
     }
 
