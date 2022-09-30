@@ -18,16 +18,16 @@ public class CityInfo {
     public CityInfo() {
 
     }
-    public CityInfo(String id, String city) {
-        this.zipCode = id;
+    public CityInfo(String zipCode, String city) {
+        this.zipCode = zipCode;
         this.city = city;
     }
 
     public String getZipCode() {
         return zipCode;
     }
-    public void setZipCode(String id) {
-        this.zipCode = id;
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
     public String getCity() {
@@ -39,7 +39,7 @@ public class CityInfo {
 
     @Override
     public String toString() {
-        return "CityInfo{" + "id=" + zipCode + ", city='" + city + '\'' + '}';
+        return "CityInfo{" + "zipCode=" + zipCode + ", city='" + city + '\'' + '}';
     }
     @Override
     public boolean equals(Object o) {
