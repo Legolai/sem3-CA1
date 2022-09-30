@@ -1,7 +1,9 @@
 package entities;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @NamedQuery(name = "Address.deleteAllRows", query = "DELETE from Address")
@@ -19,6 +21,8 @@ public class Address {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "CityInfo_zipCode", nullable = false)
     private CityInfo cityinfoZipcode;
+    @OneToMany(mappedBy = "address")
+    private Set<Person> people = new LinkedHashSet<>();
 
     public Address() {
 
@@ -63,6 +67,13 @@ public class Address {
     }
     public void setCityinfoZipcode(CityInfo cityinfoZipcode) {
         this.cityinfoZipcode = cityinfoZipcode;
+    }
+
+    public Set<Person> getPeople() {
+        return people;
+    }
+    public void setPeople(Set<Person> people) {
+        this.people = people;
     }
 
     @Override

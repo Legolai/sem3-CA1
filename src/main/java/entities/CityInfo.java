@@ -1,10 +1,9 @@
 package entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @NamedQuery(name = "CityInfo.deleteAllRows", query = "DELETE from CityInfo")
@@ -14,6 +13,8 @@ public class CityInfo {
     private String zipCode;
     @Column(name = "city", nullable = false, length = 45)
     private String city;
+    @OneToMany(mappedBy = "cityinfoZipcode")
+    private Set<Address> addresses = new LinkedHashSet<>();
 
     public CityInfo() {
 
@@ -35,6 +36,13 @@ public class CityInfo {
     }
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public Set<Address> getAddresses() {
+        return addresses;
+    }
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
     }
 
     @Override
