@@ -18,7 +18,6 @@ public class Address {
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
@@ -26,7 +25,6 @@ public class Address {
     public String getStreet() {
         return street;
     }
-
     public void setStreet(String street) {
         this.street = street;
     }
@@ -34,7 +32,6 @@ public class Address {
     public String getAdditionalInfo() {
         return additionalInfo;
     }
-
     public void setAdditionalInfo(String additionalInfo) {
         this.additionalInfo = additionalInfo;
     }

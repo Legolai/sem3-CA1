@@ -8,3 +8,9 @@ Define code standards
 Planning game ('Sprint planning')  
 Test planning  
 
+
+mørkhøj parkalle 12D
+
+kaffevej 47, 4.sal, tv.
+
+

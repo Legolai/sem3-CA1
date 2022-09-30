@@ -19,7 +19,6 @@ public class Phone {
     public String getId() {
         return id;
     }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -27,7 +26,6 @@ public class Phone {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -35,7 +33,6 @@ public class Phone {
     public Person getPerson() {
         return person;
     }
-
     public void setPerson(Person person) {
         this.person = person;
     }

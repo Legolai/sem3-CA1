@@ -38,7 +38,6 @@ public class Hobby {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -46,7 +45,6 @@ public class Hobby {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -54,7 +52,6 @@ public class Hobby {
     public String getCategory() {
         return category;
     }
-
     public void setCategory(String category) {
         this.category = category;
     }
@@ -62,7 +59,6 @@ public class Hobby {
     public String getType() {
         return type;
     }
-
     public void setType(String type) {
         this.type = type;
     }
@@ -70,9 +66,9 @@ public class Hobby {
     public Set<Person> getPeople() {
         return people;
     }
-
     public void setPeople(Set<Person> people) {
         this.people = people;
     }
+
 
 }
