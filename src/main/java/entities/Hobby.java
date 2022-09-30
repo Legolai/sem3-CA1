@@ -82,4 +82,9 @@ public class Hobby {
     public int hashCode() {
         return Objects.hash(name);
     }
+
+    public void assignPerson(Person person) {
+        if (person == null) return;
+        people.add(person);
+    }
 }
