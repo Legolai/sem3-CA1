@@ -31,6 +31,9 @@ class AddressFacadeTest {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
+            em.createNamedQuery("Phone.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Person.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Hobby.deleteAllRows").executeUpdate();
             em.createNamedQuery("Address.deleteAllRows").executeUpdate();
             em.createNamedQuery("CityInfo.deleteAllRows").executeUpdate();
             CityInfo ci1 = new CityInfo("2860","Soeborg");
@@ -69,7 +72,7 @@ class AddressFacadeTest {
         assertEquals(expected.getStreet(), actual.getStreet());
         assertEquals(expected.getFloor(), actual.getFloor());
         assertEquals(expected.getDoor(), actual.getDoor());
-        assertEquals(expected.getCityinfoZipcode(), actual.getCityinfoZipcode());
+        assertEquals(expected.getCityInfo(), actual.getCityInfo());
     }
 
     @Test

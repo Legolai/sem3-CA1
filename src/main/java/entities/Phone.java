@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@NamedQuery(name = "Phone.deleteAllRows", query = "DELETE from Phone")
 public class Phone {
     @Id
     @Column(name = "number", nullable = false, length = 45)
@@ -17,8 +18,8 @@ public class Phone {
     public Phone() {
 
     }
-    public Phone(String id, String description, Person person) {
-        this.number = id;
+    public Phone(String number, String description, Person person) {
+        this.number = number;
         this.description = description;
         this.person = person;
     }
@@ -26,8 +27,8 @@ public class Phone {
     public String getNumber() {
         return number;
     }
-    public void setNumber(String id) {
-        this.number = id;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getDescription() {
@@ -46,7 +47,7 @@ public class Phone {
 
     @Override
     public String toString() {
-        return "Phone{" + "number='" + number + '\'' + ", description='" + description + '\'' + ", person=" + person + '}';
+        return "Phone{" + "number='" + number + '\'' + ", description='" + description + '\'' + ", person=" + person.getFirstName() + " " + person.getLastName() + '}';
     }
     @Override
     public boolean equals(Object o) {
