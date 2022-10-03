@@ -43,7 +43,7 @@ public class HobbyDTO {
     }
 
     public Hobby getEntity(){
-        return new Hobby(this.name, this.description, this.category, this.type, null);
+        return new Hobby(this.name, this.description, this.category, this.type);
     }
 
     public String getName() {
