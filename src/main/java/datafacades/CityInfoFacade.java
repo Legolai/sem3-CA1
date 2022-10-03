@@ -64,7 +64,7 @@ public class CityInfoFacade implements IDataFacade<CityInfo, String>{
             throw new IllegalArgumentException("No CityInfo can be updated when zipCode is missing");
         CityInfo check = executeWithClose((em) -> em.find(CityInfo.class, cityInfo.getZipCode()));
         if (check == null)
-            throw new IllegalArgumentException("No CityInfo with the zipCode: "+cityInfo.getZipCode());
+            throw new EntityNotFoundException("No CityInfo with the zipCode: "+cityInfo.getZipCode());
 
         executeInsideTransaction((em) -> {
             em.merge(cityInfo);
