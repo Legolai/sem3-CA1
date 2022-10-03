@@ -77,6 +77,10 @@ public class Person {
     public Set<Phone> getPhones() {
         return phones;
     }
+
+    public void assignPhone(Phone phone) {
+        this.phones.add(phone);
+    }
     public void setPhones(Set<Phone> phones) {
         this.phones = phones;
     }
