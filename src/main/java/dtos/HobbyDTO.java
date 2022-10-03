@@ -3,7 +3,6 @@ package dtos;
 import entities.Hobby;
 import entities.Person;
 
-import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,6 +78,10 @@ public class HobbyDTO {
     }
     public void setPeople(Map<Integer, String> people) {
         this.people = people;
+    }
+    public void assignPerson(Person person) {
+        if (person == null) return;
+        people.put(person.getId(), person.getFirstName()+" "+person.getLastName());
     }
 
     @Override

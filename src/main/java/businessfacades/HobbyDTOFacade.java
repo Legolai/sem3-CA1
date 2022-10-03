@@ -1,6 +1,7 @@
 package businessfacades;
 
 import datafacades.HobbyFacade;
+import datafacades.PersonFacade;
 import dtos.HobbyDTO;
 import entities.Hobby;
 import utils.EMF_Creator;
@@ -8,10 +9,13 @@ import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
+import java.util.Map;
 
 public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO, String> {
     private static HobbyDTOFacade instance;
     private static HobbyFacade hobbyFacade;
+
+    private static PersonFacade personFacade;
 
     private HobbyDTOFacade() {}
 
@@ -19,6 +23,8 @@ public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO, String> {
         if (instance == null) {
             hobbyFacade = HobbyFacade.getInstance(_emf);
             instance = new HobbyDTOFacade();
+
+            personFacade = PersonFacade.getInstance(_emf);
         }
         return instance;
     }
@@ -43,7 +49,21 @@ public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO, String> {
 
     @Override
     public HobbyDTO update(HobbyDTO hobbyDTO) {
-        Hobby h = hobbyFacade.update(hobbyDTO.getEntity());
+        Hobby h;
+        if (hobbyDTO.getPeople().isEmpty()) {
+            h = hobbyFacade.update(hobbyDTO.getEntity());
+        } else {
+            Hobby toBeUpdated = hobbyDTO.getEntity();
+            Hobby inDB = hobbyFacade.getById(hobbyDTO.getName());
+            if (hobbyDTO.getPeople().equals(inDB.getPeople())) {
+                toBeUpdated.setPeople(inDB.getPeople());
+            } else {
+                for (Map.Entry<Integer,String> entry : hobbyDTO.getPeople().entrySet()) {
+                    toBeUpdated.assignPerson(personFacade.getById(entry.getKey()));
+                }
+            }
+            h = hobbyFacade.update(toBeUpdated);
+        }
         return new HobbyDTO(h);
     }
 

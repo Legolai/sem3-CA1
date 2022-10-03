@@ -128,7 +128,6 @@
 //        System.out.println("Testing is server UP");
 //        given().when().get("/parent").then().statusCode(200);
 //    }
-//
 //    @Test
 //    public void testLogRequest() {
 //        System.out.println("Testing logging request details");
@@ -136,7 +135,6 @@
 //                .when().get("/parent")
 //                .then().statusCode(200);
 //    }
-//
 //    @Test
 //    public void testLogResponse() {
 //        System.out.println("Testing logging response details");
@@ -158,7 +156,6 @@
 //                .body("name", equalTo(p1.getName()))
 //                .body("children", hasItems(hasEntry("name","Joseph"),hasEntry("name","Alberta")));
 //    }
-//
 //    @Test
 //    public void testError() {
 //        given()
@@ -171,13 +168,11 @@
 //                .body("code", equalTo(404))
 //                .body("message", equalTo("The Parent entity with ID: 999999999 Was not found"));
 //    }
-//
 //    @Test
 //    public void testPrintResponse(){
 //        Response response = given().when().get("/parent/"+p1.getId());
 //        ResponseBody body = response.getBody();
 //        System.out.println(body.prettyPrint());
-//
 //        response
 //                .then()
 //                .assertThat()
