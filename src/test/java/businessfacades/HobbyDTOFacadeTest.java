@@ -1,34 +1,37 @@
-package datafacades;
+package businessfacades;
 
+import datafacades.PersonFacade;
+import dtos.HobbyDTO;
 import entities.*;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-
+import javax.persistence.EntityNotFoundException;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PersonFacadeTest {
+class HobbyDTOFacadeTest {
 
     private static EntityManagerFactory emf;
-    private static PersonFacade facade;
+    private static HobbyDTOFacade facade;
+    private static PersonFacade personFacade;
 
+    HobbyDTO hobbyDTO1, hobbyDTO2;
     Person person1, person2;
 
     @BeforeAll
     public static void setUpClass() {
         emf = EMF_Creator.createEntityManagerFactoryForTest();
-        facade = PersonFacade.getInstance(emf);
+        facade = HobbyDTOFacade.getInstance(emf);
+        personFacade = PersonFacade.getInstance(emf);
     }
-
     @AfterAll
     public static void tearDownClass() {
-//        Clean up database after test is done or use a persistence unit with drop-and-create to start up clean on every test
+        //        Clean up database after test is done or use a persistence unit with drop-and-create to start up clean on every test
     }
 
     // Setup the DataBase in a known state BEFORE EACH TEST
@@ -37,16 +40,12 @@ class PersonFacadeTest {
     public void setUp() {
         EntityManager em = emf.createEntityManager();
 
-        Hobby hobby1 = new Hobby();
-        hobby1.setName("Akrobatik");
-        hobby1.setDescription("https://en.wikipedia.org/wiki/Acrobatics");
-        hobby1.setCategory("Generel");
-        hobby1.setType("Indendørs");
-        Hobby hobby2 = new Hobby();
-        hobby2.setName("Skuespil");
-        hobby2.setDescription("https://en.wikipedia.org/wiki/Acting");
-        hobby2.setCategory("Generel");
-        hobby2.setType("Indendørs");
+        Hobby hobby1 = new Hobby("Akrobatik", "https://en.wikipedia.org/wiki/Acrobatics",
+                "Generel", "Indendørs");
+        Hobby hobby2 = new Hobby("Skuespil", "https://en.wikipedia.org/wiki/Acting",
+                "Generel", "Indendørs");
+        hobbyDTO1 = new HobbyDTO(hobby1);
+        hobbyDTO2 = new HobbyDTO(hobby2);
 
         CityInfo cityInfo1 = new CityInfo("1000", "København");
         CityInfo cityInfo2 = new CityInfo("4000", "Helsingør");
@@ -65,6 +64,7 @@ class PersonFacadeTest {
         person2.setAddress(new Address("Strandvejen 4", null, null, cityInfo2));
         person2.setPhones(new LinkedHashSet<>(List.of(new Phone("40993040", "mobil", person1))));
         person2.assignHobby(hobby2);
+
 
         try {
             em.getTransaction().begin();
@@ -85,48 +85,50 @@ class PersonFacadeTest {
             em.close();
         }
     }
-
     @AfterEach
     public void tearDown() {
-//        Remove any data after each test was run
+        //        Remove any data after each test was run
     }
 
 
+    // TODO: Delete or change this method
     @Test
-    void testShouldGetNumberOfPersonsExisting() throws Exception {
+    void testShouldGetNumberOfHobbiesExisting() throws Exception {
         assertEquals(2, facade.getAll().size(), "Expects two rows in the database");
     }
 
     @Test
-    void testShouldGetPersonByPhoneNumber() {
-        Person person = facade.getByPhoneNumber(person1.getPhones().stream().findFirst().get().getNumber());
-        assertEquals(person1, person);
+    void testShouldCreateHobby() {
+        assertDoesNotThrow(() -> facade.create(new HobbyDTO("Amatørradio","https://en.wikipedia.org/wiki/Amateur_radio","Generel","Indendørs")));
+        assertEquals(3, facade.getAll().size());
+        assertThrows(IllegalStateException.class, () -> facade.create(new HobbyDTO("Amatørradio","https://en.wikipedia.org/wiki/Amateur_radio","Generel","Indendørs")));
     }
 
     @Test
-    void testShouldGetPersonsByCityInfo() {
-        List<Person> persons = facade.getAllByCityInfo(new CityInfo("4000", "Helsingør"));
-        assertEquals(1, persons.size());
-        assertEquals(person2, persons.get(0));
+    void testShouldGetHobbyByName() {
+        assertThrows(EntityNotFoundException.class, () -> facade.getById("Amatørradio"));
+        HobbyDTO hobby = facade.getById("Akrobatik");
+        assertEquals(hobbyDTO1, hobby);
     }
 
     @Test
-    void testShouldCreatePersonAndHobbiesByNames() {
-        Phone phone = new Phone();
-        phone.setNumber("40993550");
-        phone.setDescription("mobil");
-        Person person = facade.create("Hansen@email.com", "Hans", "Hansen", new Address("Strandvejen 42", null, null, new CityInfo("4000", "Helsingør")), Set.of(phone), List.of("Skuespil", "Akrobatik"));
+    void testShouldDeleteHobby1() {
+        assertThrows(EntityNotFoundException.class, () -> facade.delete("Amatørradio"));
+        facade.delete(hobbyDTO1.getName());
+        List<HobbyDTO> hobbies = facade.getAll();
+        assertEquals(1, hobbies.size());
+        assertEquals(hobbyDTO2, hobbies.get(0));
+        System.out.println("Hobby1 has succesfully been deleted");
     }
 
     @Test
-    void testShouldGetAllPersonsByHobbyName() {
-        Phone phone = new Phone();
-        phone.setNumber("40993550");
-        phone.setDescription("mobil");
-        facade.create("Hansen@email.com", "Hans", "Hansen", new Address("Strandvejen 42", null, null, new CityInfo("4000", "Helsingør")), Set.of(phone), List.of("Skuespil", "Akrobatik"));
-
-        List<Person> people = facade.getAllByHobby("Skuespil");
-
-        assertEquals(2, people.size());
+    void testShouldUpdateHobby1() {
+        HobbyDTO hobby = new HobbyDTO("Amatørradio", "https://en.wikipedia.org/wiki/Amateur_radio",
+                "Generel", "Indendørs");
+        assertThrows(EntityNotFoundException.class, () -> facade.update(hobby));
+        hobbyDTO1.setType("Udendørs");
+        facade.update(hobbyDTO1);
+        HobbyDTO updatedHobby1 = facade.getById(hobbyDTO1.getName());
+        assertEquals(hobbyDTO1, updatedHobby1);
     }
 }

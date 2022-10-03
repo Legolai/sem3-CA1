@@ -9,7 +9,6 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class HobbyFacade implements IDataFacade<Hobby> {
-
     private static HobbyFacade instance;
     private static EntityManagerFactory emf;
 
@@ -23,7 +22,6 @@ public class HobbyFacade implements IDataFacade<Hobby> {
      * @return an instance of this facade class.
      */
     public static HobbyFacade getInstance(EntityManagerFactory _emf) {
-
         if (instance == null) {
             emf = _emf;
             instance = new HobbyFacade();

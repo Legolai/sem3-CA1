@@ -24,6 +24,12 @@ public class Hobby {
     public Hobby() {
 
     }
+    public Hobby(String name, String description, String category, String type) {
+        this.name = name;
+        this.description = description;
+        this.category = category;
+        this.type = type;
+    }
     public Hobby(String name, String description, String category, String type, Set<Person> people) {
         this.name = name;
         this.description = description;

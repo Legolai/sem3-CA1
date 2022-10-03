@@ -13,7 +13,7 @@ public class HobbyDTO {
     private String description;
     private String category;
     private String type;
-    private Dictionary<Integer, String> people = new Hashtable<>();
+    private Map<Integer, String> people = new HashMap<>();
 
     public HobbyDTO(String name, String description, String category, String type) {
         this.name = name;
@@ -43,7 +43,7 @@ public class HobbyDTO {
     }
 
     public Hobby getEntity(){
-        return new Hobby(this.name, this.description, this.category, this.type, null);
+        return new Hobby(this.name, this.description, this.category, this.type);
     }
 
     public String getName() {
@@ -74,10 +74,10 @@ public class HobbyDTO {
         this.type = type;
     }
 
-    public Dictionary<Integer, String> getPeople() {
+    public Map<Integer, String> getPeople() {
         return people;
     }
-    public void setPeople(Dictionary<Integer, String> people) {
+    public void setPeople(Map<Integer, String> people) {
         this.people = people;
     }
 
