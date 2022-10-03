@@ -44,7 +44,7 @@ public class PersonDTO {
         this.hobbies = HobbyDTO.toList(new ArrayList<>(person.getHobbies()));
     }
 
-    public static List<PersonDTO> getDtos(List<Person> people){
+    public static List<PersonDTO> convertEntitiesToDTOs(List<Person> people){
         return people.stream().map(PersonDTO::new).collect(Collectors.toList());
     }
 
