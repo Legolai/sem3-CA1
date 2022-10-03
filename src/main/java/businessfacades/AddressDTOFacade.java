@@ -8,7 +8,7 @@ import entities.Address;
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
-public class AddressDTOFacade implements IDataDTOFacade<AddressDTO> {
+public class AddressDTOFacade implements IDataDTOFacade<AddressDTO, Integer> {
     private static AddressDTOFacade instance;
     private static AddressFacade addressFacade;
 
@@ -30,7 +30,7 @@ public class AddressDTOFacade implements IDataDTOFacade<AddressDTO> {
     }
 
     @Override
-    public <Integer> AddressDTO getById(Integer id) {
+    public AddressDTO getById(Integer id) {
         return new AddressDTO(addressFacade.getById(id));
     }
 
@@ -46,7 +46,7 @@ public class AddressDTOFacade implements IDataDTOFacade<AddressDTO> {
     }
 
     @Override
-    public <Integer> void delete(Integer id) {
+    public void delete(Integer id) {
         addressFacade.delete(id);
     }
 }
