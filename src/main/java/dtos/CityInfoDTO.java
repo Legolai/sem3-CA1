@@ -1,15 +1,8 @@
 package dtos;
 
-import entities.Address;
 import entities.CityInfo;
-
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CityInfoDTO {
