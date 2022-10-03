@@ -42,7 +42,7 @@ public class CityInfoFacade implements IDataFacade<CityInfo>{
     }
 
     @Override
-    public <Integer> CityInfo getById(Integer zipCode) {
+    public <String> CityInfo getById(String zipCode) {
         CityInfo ci =  executeWithClose((em) -> em.find(CityInfo.class, zipCode));
         if (ci == null)
             throw new EntityNotFoundException("The CityInfo entity with zipCode: "+zipCode+" Was not found");
@@ -61,10 +61,10 @@ public class CityInfoFacade implements IDataFacade<CityInfo>{
     @Override
     public CityInfo update(CityInfo cityInfo) {
         if (cityInfo.getZipCode() == null)
-            throw new IllegalArgumentException("No cityInfo can be updated when zipCode is missing");
+            throw new IllegalArgumentException("No CityInfo can be updated when zipCode is missing");
         CityInfo check = executeWithClose((em) -> em.find(CityInfo.class, cityInfo.getZipCode()));
         if (check == null)
-            throw new IllegalArgumentException("No cityInfo with the zipCode: "+cityInfo.getZipCode());
+            throw new IllegalArgumentException("No CityInfo with the zipCode: "+cityInfo.getZipCode());
 
         executeInsideTransaction((em) -> {
             em.merge(cityInfo);
@@ -73,7 +73,7 @@ public class CityInfoFacade implements IDataFacade<CityInfo>{
     }
 
     @Override
-    public <Integer> void delete(Integer zipCode) {
+    public <String> void delete(String zipCode) {
         executeInsideTransaction((em) -> {
             CityInfo ci =  em.find(CityInfo.class, zipCode);
             if (ci == null)

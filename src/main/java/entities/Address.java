@@ -1,9 +1,12 @@
 package entities;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
+@NamedQuery(name = "Address.deleteAllRows", query = "DELETE from Address")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,16 +20,18 @@ public class Address {
     private String door;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "CityInfo_zipCode", nullable = false)
-    private CityInfo cityinfoZipcode;
+    private CityInfo cityInfo;
+    @OneToMany(mappedBy = "address")
+    private Set<Person> people = new LinkedHashSet<>();
 
     public Address() {
 
     }
-    public Address(String street, String floor, String door, CityInfo cityinfoZipcode) {
+    public Address(String street, String floor, String door, CityInfo cityinfo) {
         this.street = street;
         this.floor = floor;
         this.door = door;
-        this.cityinfoZipcode = cityinfoZipcode;
+        this.cityInfo = cityinfo;
     }
 
     public Integer getId() {
@@ -57,16 +62,23 @@ public class Address {
         this.door = door;
     }
 
-    public CityInfo getCityinfoZipcode() {
-        return cityinfoZipcode;
+    public CityInfo getCityInfo() {
+        return cityInfo;
     }
-    public void setCityinfoZipcode(CityInfo cityinfoZipcode) {
-        this.cityinfoZipcode = cityinfoZipcode;
+    public void setCityInfo(CityInfo cityinfo) {
+        this.cityInfo = cityinfo;
+    }
+
+    public Set<Person> getPeople() {
+        return people;
+    }
+    public void setPeople(Set<Person> people) {
+        this.people = people;
     }
 
     @Override
     public String toString() {
-        return "Address{" + "id=" + id + ", street='" + street + '\'' + ", floor='" + floor + '\'' + ", door='" + door + '\'' + ", cityinfoZipcode=" + cityinfoZipcode + '}';
+        return "Address{" + "id=" + id + ", street='" + street + '\'' + ", floor='" + floor + '\'' + ", door='" + door + '\'' + ", cityInfo=" + cityInfo + '}';
     }
     @Override
     public boolean equals(Object o) {

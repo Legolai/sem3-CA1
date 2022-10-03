@@ -1,4 +1,6 @@
-# sem3-CA1
+# Sem3-CA1
+
+**THIS IS A SCHOOL PROJECT**
 
 
 ## Day 1 (wednesday week 1)

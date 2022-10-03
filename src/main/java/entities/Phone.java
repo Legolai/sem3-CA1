@@ -47,7 +47,7 @@ public class Phone {
 
     @Override
     public String toString() {
-        return "Phone{" + "number='" + number + '\'' + ", description='" + description + '\'' + ", person=" + person + '}';
+        return "Phone{" + "number='" + number + '\'' + ", description='" + description + '\'' + ", person=" + person.getFirstName() + " " + person.getLastName() + '}';
     }
     @Override
     public boolean equals(Object o) {

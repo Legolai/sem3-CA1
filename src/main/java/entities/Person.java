@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@NamedQuery(name = "Person.deleteAllRows", query = "DELETE from Person ")
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +18,7 @@ public class Person {
     private String firstName;
     @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne( fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "Address_id", nullable = false)
     private Address address;
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
@@ -93,7 +94,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" + "id=" + id + ", email='" + email + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", address=" + address + ", phones=" + phones + ", hobbies=" + hobbies + '}';
+        return "Person{" + "id=" + id + ", email='" + email + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", address=" + address + ", phones=" + phones + ", hobbies=" + hobbies.stream().reduce("", (acc, curr) -> acc + ", " + curr.getName(), String::concat) + '}';
     }
     @Override
     public boolean equals(Object o) {
@@ -105,5 +106,10 @@ public class Person {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void assignHobby(Hobby hobby) {
+        if (hobby == null) return;
+        hobbies.add(hobby);
     }
 }

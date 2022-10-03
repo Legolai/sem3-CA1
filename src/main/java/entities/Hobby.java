@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@NamedQuery(name = "Hobby.deleteAllRows", query = "DELETE from Hobby")
 public class Hobby {
     @Id
     @Column(name = "name", nullable = false, length = 45)
@@ -80,5 +81,10 @@ public class Hobby {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public void assignPerson(Person person) {
+        if (person == null) return;
+        people.add(person);
     }
 }
