@@ -67,6 +67,10 @@ public class Person {
         this.lastName = lastName;
     }
 
+    public String getFullName() {
+        return String.format("%s %s", this.firstName, this.lastName);
+    }
+
     public Address getAddress() {
         return address;
     }
