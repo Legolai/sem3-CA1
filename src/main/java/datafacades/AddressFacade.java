@@ -65,7 +65,7 @@ public class AddressFacade implements IDataFacade<Address, Integer>{
             throw new IllegalArgumentException("No Address can be updated when id is missing");
         Address check = executeWithClose((em) -> em.find(Address.class, address.getId()));
         if (check == null)
-            throw new IllegalArgumentException("No Address with the zipCode: "+address.getId());
+            throw new EntityNotFoundException("No Address with the zipCode: "+address.getId());
 
         executeInsideTransaction((em) -> {
             em.merge(address);

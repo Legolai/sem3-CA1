@@ -21,7 +21,7 @@ public class Address {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "CityInfo_zipCode", nullable = false)
     private CityInfo cityInfo;
-    @OneToMany(mappedBy = "address")
+    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Person> people = new LinkedHashSet<>();
 
     public Address() {

@@ -9,7 +9,6 @@ import utils.EMF_Creator;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,8 +19,10 @@ class AddressDTOFacadeTest {
     private static AddressDTOFacade facade;
     private static PersonFacade personFacade;
 
-    AddressDTO hobbyDTO1, hobbyDTO2;
+    AddressDTO addressDTO, addressDTO1 ;
+    Address address, address1;
     Person person1, person2;
+    CityInfo cityInfo2;
 
     @BeforeAll
     public static void setUpClass() {
@@ -40,20 +41,23 @@ class AddressDTOFacadeTest {
         EntityManager em = emf.createEntityManager();
 
         CityInfo cityInfo1 = new CityInfo("1000", "København");
-        CityInfo cityInfo2 = new CityInfo("4000", "Helsingør");
-        Address address1 = new Address("Møllevej 18", null, null, cityInfo1);
-        Address address2 = new Address("Strandvejen 4", null, null, cityInfo2);
+        cityInfo2 = new CityInfo("4000", "Helsingør");
+
+        address = new Address("Møllevej 18", null, null, cityInfo1);
+        address1 = new Address("Strandvejen 4", null, null, cityInfo2);
+        addressDTO = new AddressDTO(address);
+        addressDTO1 = new AddressDTO(address1);
 
         person1 = new Person();
         person1.setFirstName("Jens");
         person1.setLastName("Jensen");
         person1.setEmail("Jensen@email.com");
-        person1.setAddress(address1);
+        person1.setAddress(address);
         person2 = new Person();
         person2.setFirstName("Mads");
         person2.setLastName("Madsen");
         person2.setEmail("Madsen@email.com");
-        person2.setAddress(address2);
+        person2.setAddress(address1);
 
         try {
             em.getTransaction().begin();
@@ -69,6 +73,8 @@ class AddressDTOFacadeTest {
 
             em.getTransaction().commit();
         } finally {
+            addressDTO.setId(address.getId());
+            addressDTO1.setId(address1.getId());
             em.close();
         }
     }
@@ -78,7 +84,6 @@ class AddressDTOFacadeTest {
     }
 
 
-    // TODO: Delete or change this method
     @Test
     void testShouldGetNumberOfAddressesExisting() throws Exception {
         assertEquals(2, facade.getAll().size(), "Expects two rows in the database");
@@ -86,35 +91,38 @@ class AddressDTOFacadeTest {
 
     @Test
     void testShouldCreateAddress() {
-        assertDoesNotThrow(() -> facade.create(new AddressDTO("")));
+        Address newAddress = new Address("Tinghøjvej 58", "", "", new CityInfo("4000", "Helsingør"));
+        AddressDTO newAddressDTO = new AddressDTO(newAddress);
+        assertDoesNotThrow(() -> facade.create(newAddressDTO));
         assertEquals(3, facade.getAll().size());
-        assertThrows(IllegalStateException.class, () -> facade.create(new AddressDTO("")));
+        assertThrows(IllegalStateException.class, () -> facade.create(new AddressDTO(new Address("Tinghøjvej 58", "", "", new CityInfo("2860", "Søborg")))));
     }
 
     @Test
-    void testShouldGetAddressByName() {
-        assertThrows(EntityNotFoundException.class, () -> facade.getById("Amatørradio"));
-        AddressDTO hobby = facade.getById("Akrobatik");
-        assertEquals(hobbyDTO1, hobby);
+    void testShouldGetAddressById() {
+        assertThrows(EntityNotFoundException.class, () -> facade.getById(10));
+        AddressDTO addressDTO = facade.getById(this.addressDTO.getId());
+        assertEquals(this.addressDTO, addressDTO);
     }
 
     @Test
-    void testShouldDeleteAddress1() {
-        assertThrows(EntityNotFoundException.class, () -> facade.delete("Amatørradio"));
-        facade.delete(hobbyDTO1.getName());
-        List<AddressDTO> hobbies = facade.getAll();
-        assertEquals(1, hobbies.size());
-        assertEquals(hobbyDTO2, hobbies.get(0));
-        System.out.println("Hobby1 has succesfully been deleted");
+    void testShouldDeleteAddressById() {
+        assertThrows(EntityNotFoundException.class, () -> facade.delete(10));
+        personFacade.delete(person1.getId());
+        List<AddressDTO> addresses = facade.getAll();
+        assertEquals(1, addresses.size());
+        assertEquals(addressDTO1, addresses.get(0));
+        System.out.println("addressDTO has succesfully been deleted");
     }
 
     @Test
-    void testShouldUpdateAddress1() {
-        AddressDTO hobby = new AddressDTO("");
-        assertThrows(EntityNotFoundException.class, () -> facade.update(hobby));
-        hobbyDTO1.setType("");
-        facade.update(hobbyDTO1);
-        AddressDTO updatedAddress1 = facade.getById(hobbyDTO1.getName());
-        assertEquals(hobbyDTO1, updatedAddress1);
+    void testShouldUpdateAddress() {
+        AddressDTO addressDTO = new AddressDTO(new Address("Tinghøjvej 58", "", "", cityInfo2));
+        assertThrows(IllegalArgumentException.class, () -> facade.update(addressDTO));
+        addressDTO1.setStreet("Tinghøjvej 100");
+        addressDTO1.setFloor("2");
+        facade.update(addressDTO1);
+        AddressDTO updatedAddress1 = facade.getById(addressDTO1.getId());
+        assertEquals(addressDTO1, updatedAddress1);
     }
 }
