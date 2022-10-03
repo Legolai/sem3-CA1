@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class PersonFacade implements IDataFacade<Person> {
+public class PersonFacade implements IDataFacade<Person, Integer> {
 
     private static PersonFacade instance;
     private static EntityManagerFactory emf;
@@ -67,7 +67,7 @@ public class PersonFacade implements IDataFacade<Person> {
     }
 
     @Override
-    public <Integer> Person getById(Integer id) {
+    public Person getById(Integer id) {
         return executeWithClose(em -> em.find(Person.class, id));
     }
 
@@ -115,7 +115,7 @@ public class PersonFacade implements IDataFacade<Person> {
     }
 
     @Override
-    public <Integer> void delete(Integer id) {
+    public void delete(Integer id) {
         executeInsideTransaction(em -> {
             Person p = em.find(Person.class, id);
             if (p == null) throw new EntityNotFoundException();

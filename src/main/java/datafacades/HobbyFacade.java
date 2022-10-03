@@ -8,7 +8,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-public class HobbyFacade implements IDataFacade<Hobby> {
+public class HobbyFacade implements IDataFacade<Hobby, String> {
     private static HobbyFacade instance;
     private static EntityManagerFactory emf;
 
@@ -50,7 +50,7 @@ public class HobbyFacade implements IDataFacade<Hobby> {
     }
 
     @Override
-    public <String> Hobby getById(String name) {
+    public Hobby getById(String name) {
         Hobby hobby = executeWithClose(em -> em.find(Hobby.class, name));
         if (hobby == null)
             throw new EntityNotFoundException("Hobby called " + name + " does not exists!");
@@ -73,7 +73,7 @@ public class HobbyFacade implements IDataFacade<Hobby> {
     }
 
     @Override
-    public <String> void delete(String name) {
+    public void delete(String name) {
         executeInsideTransaction(em -> {
             Hobby hobby = em.find(Hobby.class, name);
             if (hobby == null) throw new EntityNotFoundException("Hobby called " + name + " does not exists!");

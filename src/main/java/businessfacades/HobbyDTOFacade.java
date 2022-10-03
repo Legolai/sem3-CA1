@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
-public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO> {
+public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO, String> {
     private static HobbyDTOFacade instance;
     private static HobbyFacade hobbyFacade;
 
@@ -32,8 +32,8 @@ public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO> {
     }
 
     @Override
-    public <P> HobbyDTO getById(P p) {
-        return new HobbyDTO(hobbyFacade.getById(p));
+    public HobbyDTO getById(String name) {
+        return new HobbyDTO(hobbyFacade.getById(name));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO> {
     }
 
     @Override
-    public <P> void delete(P p) {
-        hobbyFacade.delete(p);
+    public void delete(String name) {
+        hobbyFacade.delete(name);
     }
 }
