@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public interface IDataFacade<T> {
+public interface IDataFacade<T, I> {
     EntityManager getEntityManager();
 
     T create(T t);
-    <P> T getById(P p); //throws EntityNotFoundException;
+    T getById(I id); //throws EntityNotFoundException;
     List<T> getAll();
     T update(T t); // throws EntityNotFoundException;
-    <P> void delete(P p); // throws EntityNotFoundException;
+    void delete(I id); // throws EntityNotFoundException;
 
     default  <R> R executeWithClose(Function<EntityManager, R> action) {
         EntityManager em = getEntityManager();

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Rename Class to a relevant name Add add relevant facade methods
  */
-public class PhoneFacade implements IDataFacade<Phone> {
+public class PhoneFacade implements IDataFacade<Phone, String> {
 
     private static PhoneFacade instance;
     private static EntityManagerFactory emf;
@@ -54,7 +54,7 @@ public class PhoneFacade implements IDataFacade<Phone> {
     }
 
     @Override
-    public <String> Phone getById(String number) {
+    public Phone getById(String number) {
         return executeWithClose(em -> {
             Phone phone = em.find(Phone.class, number);
             if (phone == null)
@@ -88,7 +88,7 @@ public class PhoneFacade implements IDataFacade<Phone> {
     }
 
     @Override
-    public <String> void delete(String number) {
+    public void delete(String number) {
          executeInsideTransaction(em -> {
             if (number == null)
                 throw new IllegalArgumentException("No Phone can be updated when number is missing");

@@ -8,7 +8,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-public class CityInfoFacade implements IDataFacade<CityInfo>{
+public class CityInfoFacade implements IDataFacade<CityInfo, String>{
 
     private static CityInfoFacade instance;
     private static EntityManagerFactory emf;
@@ -42,7 +42,7 @@ public class CityInfoFacade implements IDataFacade<CityInfo>{
     }
 
     @Override
-    public <String> CityInfo getById(String zipCode) {
+    public CityInfo getById(String zipCode) {
         CityInfo ci =  executeWithClose((em) -> em.find(CityInfo.class, zipCode));
         if (ci == null)
             throw new EntityNotFoundException("The CityInfo entity with zipCode: "+zipCode+" Was not found");
@@ -73,7 +73,7 @@ public class CityInfoFacade implements IDataFacade<CityInfo>{
     }
 
     @Override
-    public <String> void delete(String zipCode) {
+    public void delete(String zipCode) {
         executeInsideTransaction((em) -> {
             CityInfo ci =  em.find(CityInfo.class, zipCode);
             if (ci == null)

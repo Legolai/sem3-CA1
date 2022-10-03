@@ -9,7 +9,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-public class AddressFacade implements IDataFacade<Address>{
+public class AddressFacade implements IDataFacade<Address, Integer>{
 
     private static AddressFacade instance;
     private static EntityManagerFactory emf;
@@ -43,7 +43,7 @@ public class AddressFacade implements IDataFacade<Address>{
     }
 
     @Override
-    public <Integer> Address getById(Integer id) {
+    public Address getById(Integer id) {
         Address a =  executeWithClose((em) -> em.find(Address.class, id));
         if (a == null)
             throw new EntityNotFoundException("The Address entity with id: "+id+" Was not found");
@@ -74,7 +74,7 @@ public class AddressFacade implements IDataFacade<Address>{
     }
 
     @Override
-    public <Integer> void delete(Integer id) {
+    public void delete(Integer id) {
         executeInsideTransaction((em) -> {
             Address a =  em.find(Address.class, id);
             if (a == null)
