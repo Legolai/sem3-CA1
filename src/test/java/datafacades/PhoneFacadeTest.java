@@ -9,6 +9,7 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -66,12 +67,22 @@ class PhoneFacadeTest {
     }
 
     @Test
-    void create() {
-
+    void shouldCreateNewPhone() {
+        System.out.println("creating new phone");
+        Phone newPhone = new Phone("12121212", "landline", person);
+        Phone actual = facade.create(newPhone);
+        Phone expected = facade.getById("12121212");
+        System.out.println("comparing actual: " + actual + " with expected: " + expected);
+        assertEquals(expected, actual);
     }
 
     @Test
-    void getById() {
+    void shouldGetPhoneByNumber() {
+        System.out.println("getting phone by number");
+        Phone actual = facade.getById(p1.getNumber());
+        Phone expected = p1;
+        System.out.println("comparing actual: " + actual + " with expected: " + expected);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -84,10 +95,21 @@ class PhoneFacadeTest {
     }
 
     @Test
-    void update() {
+    void shouldUpdateDescriptionForPhone() {
+        System.out.println("updating phone p1");
+        Phone updatedPhone = p1;
+        updatedPhone.setDescription("new type of phone");
+        Phone actual = facade.update(updatedPhone);
+        Phone expected = facade.getById(p1.getNumber());
+        System.out.println("comparing actual: " + actual + " with expected: " + expected);
+        assertEquals(expected, actual);
     }
 
     @Test
-    void delete() {
+    void shouldDeletePhone() {
+        System.out.println("deleting phone");
+        Phone toBeDeleted = p1;
+        facade.delete(toBeDeleted.getNumber());
+        assertThrows(EntityNotFoundException.class, () -> facade.getById(toBeDeleted.getNumber()));
     }
 }

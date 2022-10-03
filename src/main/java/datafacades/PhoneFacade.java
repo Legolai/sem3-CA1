@@ -5,6 +5,7 @@ import entities.Phone;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class PhoneFacade implements IDataFacade<Phone> {
         return executeWithClose(em -> {
             Phone phone = em.find(Phone.class, number);
             if (phone == null)
-                throw new IllegalArgumentException("No Phone can be found with the number:" + number);
+                throw new EntityNotFoundException("No Phone can be found with the number:" + number);
 
             return phone;
         });
@@ -73,11 +74,12 @@ public class PhoneFacade implements IDataFacade<Phone> {
 
     @Override
     public Phone update(Phone phone) {
-        if (phone.getNumber() == null)
-            throw new IllegalArgumentException("No Phone can be updated when number is missing");
 
-        Phone numberFound = executeWithClose(em -> em.find(Phone.class, phone.getNumber()));
-        if (numberFound == null)
+        if (phone.getNumber() == null)
+            throw new IllegalArgumentException("No Phone can be updated when phone is missing");
+
+        boolean numberFound = executeWithClose(em -> em.find(Phone.class, phone.getNumber()) == null);
+        if (numberFound)
             throw new IllegalArgumentException("No Phone number found with number:" + phone.getNumber());
 
         executeInsideTransaction(em -> em.merge(phone));
@@ -88,11 +90,15 @@ public class PhoneFacade implements IDataFacade<Phone> {
     @Override
     public <String> void delete(String number) {
          executeInsideTransaction(em -> {
-            Phone phone = em.find(Phone.class, number);
-            if (phone == null)
-                throw new IllegalArgumentException("No Phone can be found with the number:" + number);
+            if (number == null)
+                throw new IllegalArgumentException("No Phone can be updated when number is missing");
 
-            em.remove(number);
+            Phone phone = em.find(Phone.class, number);
+
+            if (phone == null)
+                throw new EntityNotFoundException("No Phone can be found with the number:" + number);
+
+            em.remove(phone);
         });
     }
 }
