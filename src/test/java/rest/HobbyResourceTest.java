@@ -41,8 +41,8 @@ class HobbyResourceTest {
     private static HttpServer httpServer;
     private static EntityManagerFactory emf;
 
-    private static HobbyDTO hobbyDTO1, hobbyDTO2;
-    private static Person person1, person2;
+    private HobbyDTO hobbyDTO1, hobbyDTO2;
+    private Person person1, person2;
 
 
     static HttpServer startServer() {
@@ -80,8 +80,6 @@ class HobbyResourceTest {
                 "Generel", "Indendørs");
         Hobby hobby2 = new Hobby("Skuespil", "https://en.wikipedia.org/wiki/Acting",
                 "Generel", "Indendørs");
-        hobbyDTO1 = new HobbyDTO(hobby1);
-        hobbyDTO2 = new HobbyDTO(hobby2);
 
         CityInfo cityInfo1 = new CityInfo("1000", "København");
         CityInfo cityInfo2 = new CityInfo("4000", "Helsingør");
@@ -93,6 +91,7 @@ class HobbyResourceTest {
         person1.setAddress(new Address("Møllevej 18", null, null, cityInfo1));
         person1.setPhones(new LinkedHashSet<>(List.of(new Phone("20203040", "mobil", person1))));
         person1.assignHobby(hobby1);
+
         person2 = new Person();
         person2.setFirstName("Mads");
         person2.setLastName("Madsen");
@@ -101,6 +100,8 @@ class HobbyResourceTest {
         person2.setPhones(new LinkedHashSet<>(List.of(new Phone("40993040", "mobil", person2))));
         person2.assignHobby(hobby2);
 
+        hobbyDTO1 = new HobbyDTO(hobby1);
+        hobbyDTO2 = new HobbyDTO(hobby2);
 
         try {
             em.getTransaction().begin();
@@ -118,6 +119,8 @@ class HobbyResourceTest {
 
             em.getTransaction().commit();
         } finally {
+            hobbyDTO1.assignPerson(person1);
+            hobbyDTO2.assignPerson(person2);
             em.close();
         }
     }
@@ -235,8 +238,8 @@ class HobbyResourceTest {
         ResponseBody body = response.getBody();
         System.out.println(body.prettyPrint());
 
-        hobbyDTO2.assignPerson(person2);
         hobbyDTO2.assignPerson(person1);
+        System.out.println(hobbyDTO2);
         hobbyDTO2.setDescription("temporarily removed for update test");
         String requestBody = GSON.toJson(hobbyDTO2);
 
@@ -249,24 +252,27 @@ class HobbyResourceTest {
                 .assertThat()
                 .statusCode(200)
                 .body("name", equalTo(hobbyDTO2.getName()))
-                .body("description", equalTo("temporarily removed for update test"));
+                .body("description", equalTo("temporarily removed for update test"))
+                .body("people", hasEntry(""+person2.getId(), person2.getFullName()))
+                .body("people", hasEntry(""+person1.getId(), person1.getFullName()));
 
         System.out.println("After given");
         Response response2 = given().when().get("/hobby/"+hobbyDTO2.getName());
         ResponseBody body2 = response2.getBody();
         System.out.println(body2.prettyPrint());
 
-        given()
-                .contentType(ContentType.JSON)
-                .get("/hobby/{name}",hobbyDTO2.getName())
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("name", equalTo(hobbyDTO2.getName()))
-                .body("description", equalTo(hobbyDTO2.getDescription()))
-                .body("category", equalTo(hobbyDTO2.getCategory()))
-                .body("type", equalTo(hobbyDTO2.getType()))
-                .body("people", hasEntry(""+person2.getId(), person2.getFirstName()+" "+person2.getLastName()));
+//        given()
+//                .contentType(ContentType.JSON)
+//                .get("/hobby/{name}",hobbyDTO2.getName())
+//                .then()
+//                .assertThat()
+//                .statusCode(HttpStatus.OK_200.getStatusCode())
+//                .body("name", equalTo(hobbyDTO2.getName()))
+//                .body("description", equalTo(hobbyDTO2.getDescription()))
+//                .body("category", equalTo(hobbyDTO2.getCategory()))
+//                .body("type", equalTo(hobbyDTO2.getType()))
+//                .body("people", hasEntry(""+person2.getId(), person2.getFirstName()+" "+person2.getLastName()));
+//
     }
 
     @Test

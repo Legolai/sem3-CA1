@@ -27,12 +27,11 @@ public class HobbyResource {
     @Path("/{name}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getById(@PathParam("name") String name) throws EntityNotFoundException {
-        HobbyDTO h = FACADE.getById(name);
-        return Response.ok().entity(GSON.toJson(h)).build();
+        return Response.ok().entity(GSON.toJson(FACADE.getById(name))).build();
     }
 
     @POST
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})     //It needs to get a json containing HobbyDTO not Hobby
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(String content) {
         HobbyDTO hdto = GSON.fromJson(content, HobbyDTO.class);

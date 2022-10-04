@@ -17,7 +17,7 @@ public class Hobby {
     private String category;
     @Column(name = "type", nullable = false, length = 45)
     private String type;
-    @ManyToMany
+    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "Person_has_Hobby", joinColumns = @JoinColumn(name = "Hobby_name"), inverseJoinColumns = @JoinColumn(name = "Person_id"))
     private Set<Person> people = new LinkedHashSet<>();
 

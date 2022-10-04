@@ -54,13 +54,8 @@ public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO, String> {
             h = hobbyFacade.update(hobbyDTO.getEntity());
         } else {
             Hobby toBeUpdated = hobbyDTO.getEntity();
-            Hobby inDB = hobbyFacade.getById(hobbyDTO.getName());
-            if (hobbyDTO.getPeople().equals(inDB.getPeople())) {
-                toBeUpdated.setPeople(inDB.getPeople());
-            } else {
-                for (Map.Entry<Integer,String> entry : hobbyDTO.getPeople().entrySet()) {
-                    toBeUpdated.assignPerson(personFacade.getById(entry.getKey()));
-                }
+            for (Integer id : hobbyDTO.getPeople().keySet()) {
+                toBeUpdated.assignPerson(personFacade.getById(id));
             }
             h = hobbyFacade.update(toBeUpdated);
         }
