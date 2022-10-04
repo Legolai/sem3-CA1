@@ -23,7 +23,7 @@ public class Person {
     private Address address;
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private Set<Phone> phones = new LinkedHashSet<>();
-    @ManyToMany
+    @ManyToMany(cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "Person_has_Hobby", joinColumns = @JoinColumn(name = "Person_id"), inverseJoinColumns = @JoinColumn(name = "Hobby_name"))
     private Set<Hobby> hobbies = new LinkedHashSet<>();
 

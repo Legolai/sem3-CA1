@@ -3,7 +3,6 @@ package dtos;
 import entities.Hobby;
 import entities.Person;
 
-import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,8 +33,7 @@ public class HobbyDTO {
         this.description = hobby.getDescription();
         this.category = hobby.getCategory();
         this.type = hobby.getType();
-        hobby.getPeople().forEach(Person -> this.people.put(Person.getId(),
-                Person.getFirstName()+" "+Person.getLastName()));
+        this.people = hobby.getPeople().stream().collect(Collectors.toMap(Person::getId, Person::getFullName));
     }
 
     public static List<HobbyDTO> toList(List<Hobby> hobbyList) {
@@ -79,6 +77,10 @@ public class HobbyDTO {
     }
     public void setPeople(Map<Integer, String> people) {
         this.people = people;
+    }
+    public void assignPerson(Person person) {
+        if (person == null) return;
+        people.put(person.getId(), person.getFullName());
     }
 
     @Override

@@ -6,7 +6,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HobbyFacade implements IDataFacade<Hobby, String> {
     private static HobbyFacade instance;
@@ -79,5 +82,15 @@ public class HobbyFacade implements IDataFacade<Hobby, String> {
             if (hobby == null) throw new EntityNotFoundException("Hobby called " + name + " does not exists!");
             em.remove(hobby);
         });
+    }
+
+    public Map<String, Integer> getCountOfAllMembers() {
+        return executeWithClose(em -> {
+            TypedQuery<Object[]> query = em.createQuery("SELECT h.name, COUNT(h.people) FROM Hobby h GROUP BY h.name", Object[].class);
+            return query.getResultList().stream().collect(Collectors.toMap(o -> String.valueOf(o[0]), o -> (int) Long.parseLong(String.valueOf(o[1]))));
+        });
+    }
+    public Integer getCountOfMembersForHobby(String name) {
+        return getCountOfAllMembers().get(name);
     }
 }

@@ -1,4 +1,6 @@
-INSERT INTO HOBBY (name,description,category,type)  (name,description,category,type) VALUES ('3D-udskrivning','https://en.wikipedia.org/wiki/3D_printing','Generel','Indendørs');
+use sem3_CA1;
+
+INSERT INTO HOBBY (name,description,category,type)  VALUES ('3D-udskrivning','https://en.wikipedia.org/wiki/3D_printing','Generel','Indendørs');
 INSERT INTO HOBBY (name,description,category,type)  VALUES ('Akrobatik','https://en.wikipedia.org/wiki/Acrobatics','Generel','Indendørs');
 INSERT INTO HOBBY (name,description,category,type)  VALUES ('Skuespil','https://en.wikipedia.org/wiki/Acting','Generel','Indendørs');
 INSERT INTO HOBBY (name,description,category,type)  VALUES ('Amatørradio','https://en.wikipedia.org/wiki/Amateur_radio','Generel','Indendørs');
@@ -449,3 +451,4 @@ INSERT INTO HOBBY (name,description,category,type)  VALUES ('Gongoozler','https:
 INSERT INTO HOBBY (name,description,category,type)  VALUES ('Satellitovervågning','https://en.wikipedia.org/wiki/Satellite_watching','Observation','Udendørs');
 INSERT INTO HOBBY (name,description,category,type)  VALUES ('Trainspotting (hobby)','https://en.wikipedia.org/wiki/Trainspotting_(hobby)','Observation','Udendørs');
 INSERT INTO HOBBY (name,description,category,type)  VALUES ('Hvalsafari','https://en.wikipedia.org/wiki/Whale_watching','Observation','Udendørs');
+
