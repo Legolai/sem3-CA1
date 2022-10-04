@@ -247,7 +247,8 @@ class HobbyResourceTest {
                 .header("Content-type", ContentType.JSON)
                 .body(requestBody)
                 .when()
-                .put("/hobby/{name}",hobbyDTO2.getName())
+                .pathParam("name", hobbyDTO2.getName())
+                .put("/hobby/{name}")
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -288,10 +289,41 @@ class HobbyResourceTest {
     // More test tools from: https://www.baeldung.com/java-junit-hamcrest-guide
 
     @Test
-    public void testToString(){
+    public void testToString() {
         System.out.println("Check if obj.toString() creates the right output");
         String str = hobbyDTO1.toString();
         assertThat(hobbyDTO1,hasToString(str));
+    }
+
+    @Test
+    public void testGetCountOfAllMembers() {
+        given()
+                .when()
+                .get("/hobby/count")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("Skuespil", equalTo(1))
+                .body("Akrobatik", equalTo(1));
+
+        Response response = given().when().get("/hobby/count");
+        ResponseBody body = response.getBody();
+        System.out.println(body.prettyPrint());
+    }
+
+    @Test
+    public void testGetCountOfMembersForHobby() {
+        Response response = given().when().get("/hobby/{name}", hobbyDTO2.getName());
+        ResponseBody body = response.getBody();
+        System.out.println(body.prettyPrint());
+
+        given()
+                .when()
+                .get("/hobby/{name}/count", hobbyDTO2.getName())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("Skuespil", equalTo(1));
     }
 
 

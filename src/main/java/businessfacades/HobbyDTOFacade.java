@@ -8,8 +8,10 @@ import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO, String> {
     private static HobbyDTOFacade instance;
@@ -65,5 +67,12 @@ public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO, String> {
     @Override
     public void delete(String name) {
         hobbyFacade.delete(name);
+    }
+
+    public Map<String, Integer> getCountOfAllMembers() {
+        return hobbyFacade.getCountOfAllMembers();
+    }
+    public Integer getCountOfMembersForHobby(String name) {
+        return hobbyFacade.getCountOfMembersForHobby(name);
     }
 }

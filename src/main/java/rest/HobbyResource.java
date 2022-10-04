@@ -10,6 +10,9 @@ import utils.EMF_Creator;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.AbstractMap;
+import java.util.Collections;
+import java.util.Map;
 
 @Path("hobby")
 public class HobbyResource {
@@ -51,7 +54,7 @@ public class HobbyResource {
     }
 
     @DELETE
-    @Path("{name}")
+    @Path("/{name}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response delete(@PathParam("name") String name) throws EntityNotFoundException {
         FACADE.delete(name);
@@ -59,5 +62,18 @@ public class HobbyResource {
         return Response.ok().build(); //.entity(GSON.toJson(deleted)).build();
     }
 
-
+    @GET
+    @Path("/count")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getCountOfAllMembers() {
+        Map<String, Integer> result = FACADE.getCountOfAllMembers();
+        return Response.ok().entity(GSON.toJson(result)).build();
+    }
+    @GET
+    @Path("/{name}/count")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getCountOfMembersForHobby(@PathParam("name") String name) {
+        Integer result = FACADE.getCountOfMembersForHobby(name);        //TODO: This method has no error handling
+        return Response.ok().entity(GSON.toJson(Collections.singletonMap(name, result))).build();
+    }
 }
