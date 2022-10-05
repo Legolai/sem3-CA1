@@ -3,6 +3,7 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.HobbyDTO;
+import dtos.PersonDTO;
 import entities.*;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -20,18 +21,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static io.restassured.RestAssured.given;
-import static junit.framework.Assert.assertEquals;
-import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
 
-class HobbyResourceTest {
+class PersonResourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
@@ -41,6 +39,7 @@ class HobbyResourceTest {
     private static HttpServer httpServer;
     private static EntityManagerFactory emf;
 
+    private PersonDTO personDTO1, personDTO2;
     private HobbyDTO hobbyDTO1, hobbyDTO2;
     private Person person1, person2;
 
@@ -83,6 +82,7 @@ class HobbyResourceTest {
 
         CityInfo cityInfo1 = new CityInfo("1000", "København");
         CityInfo cityInfo2 = new CityInfo("4000", "Helsingør");
+        CityInfo cityInfo3 = new CityInfo("2610", "Rødovre");
 
         person1 = new Person();
         person1.setFirstName("Jens");
@@ -114,6 +114,7 @@ class HobbyResourceTest {
             em.persist(hobby2);
             em.persist(cityInfo1);
             em.persist(cityInfo2);
+            em.persist(cityInfo3);
             em.persist(person1);
             em.persist(person2);
 
@@ -121,6 +122,8 @@ class HobbyResourceTest {
         } finally {
             hobbyDTO1.assignPerson(person1);
             hobbyDTO2.assignPerson(person2);
+            personDTO1 = new PersonDTO(person1);
+            personDTO2 = new PersonDTO(person2);
             em.close();
         }
     }
@@ -149,14 +152,16 @@ class HobbyResourceTest {
     public void testGetById()  {
         given()
                 .contentType(ContentType.JSON)
-                .get("/hobby/{name}",hobbyDTO1.getName())
+                .get("/person/{id}",personDTO1.getId())
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("name", equalTo(hobbyDTO1.getName()))
-                .body("description", equalTo(hobbyDTO1.getDescription()))
-                .body("category", equalTo(hobbyDTO1.getCategory()))
-                .body("type", equalTo(hobbyDTO1.getType()));
+                .body("firstName", equalTo(personDTO1.getFirstName()))
+                .body("lastName", equalTo(personDTO1.getLastName()))
+                .body("email", equalTo(personDTO1.getEmail()))
+                .body("phones", hasEntry("number", equalTo(personDTO1.getPhones().get(0))))
+                .body("address", hasEntry("id", equalTo(personDTO1.getAddress().getId())))
+                .body("hobbies", hasEntry("name", equalTo(personDTO1.getHobbies().get(0).getName())));
     }
 
     //TODO: This for later, when we do error handling
@@ -174,114 +179,99 @@ class HobbyResourceTest {
 
     @Test
     public void testPrintResponse(){
-        Response response = given().when().get("/hobby/"+hobbyDTO1.getName());
+        Response response = given().when().get("/person/"+personDTO1.getId());
         ResponseBody body = response.getBody();
         System.out.println(body.prettyPrint());
 
         response
                 .then()
                 .assertThat()
-                .body("name",equalTo("Akrobatik"));
+                .body("firstName",equalTo("Jens"));
     }
 
-//    @Test
-//    public void exampleJsonPathTest() {
-//        Response res = given().get("/parent/"+p1.getId());
-//        assertEquals(200, res.getStatusCode());
-//        String json = res.asString();
-//        JsonPath jsonPath = new JsonPath(json);
-//        assertEquals("Henrik", jsonPath.get("name"));
-//    }
-
     @Test
-    public void getAllHobbies() throws Exception {
-        List<HobbyDTO> hobbyDTOs;
+    public void getAllPersons() throws Exception {
+        List<PersonDTO> personDTOS;
 
-        hobbyDTOs = given()
+        personDTOS = given()
                 .contentType("application/json")
                 .when()
-                .get("/hobby")
+                .get("/person")
                 .then()
-                .extract().body().jsonPath().getList("", HobbyDTO.class);
+                .extract().body().jsonPath().getList("", PersonDTO.class);
 
 //        HobbyDTO h1DTO = new HobbyDTO(ho);
 //        HobbyDTO h2DTO = new HobbyDTO(p2);
-        assertThat(hobbyDTOs, containsInAnyOrder(hobbyDTO1, hobbyDTO2));
+        assertThat(personDTOS, containsInAnyOrder(personDTO1, personDTO2));
     }
 
     @Test
     public void postTest() {
-        Hobby h = new Hobby("Skiing", "link to wiki here", "General", "Udendørs");
-        HobbyDTO hdto = new HobbyDTO(h);
-        String requestBody = GSON.toJson(hdto);
+        Person p = new Person();
+        p.setFirstName("Michael");
+        p.setLastName("Xu");
+        p.setEmail("michael@mail.com");
+        p.setAddress(new Address("Kaffevej 47", "4. sal", "tv.", new CityInfo("2610", "Rødovre")));
+        p.assignPhone(new Phone("60608080", "mobil", p));
+        p.assignHobby(hobbyDTO1.getEntity());
+
+        PersonDTO pdto = new PersonDTO(p);
+        String requestBody = GSON.toJson(pdto);
 
         given()
                 .header("Content-type", ContentType.JSON)
                 .and()
                 .body(requestBody)
                 .when()
-                .post("/hobby")
+                .post("/person")
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .body("name", notNullValue())
-                .body("name", equalTo("Skiing"))
-                .body("description", equalTo("link to wiki here"))
-                .body("category", equalTo("General"))
-                .body("type", equalTo("Udendørs"));
+                .body("firstName", equalTo("Michael"))
+                .body("lastName", equalTo("Xu"))
+                .body("email", equalTo("michael@mail.com"))
+                .body("phones", hasEntry("number", equalTo("60608080")))
+                .body("address", hasEntry("street", equalTo("Kaffevej 47")))
+                .body("hobbies", hasEntry("name", equalTo(hobbyDTO1.getName())));
     }
 
     @Test
     public void updateTest() {
         System.out.println("Start of update test");
-        Response response = given().when().get("/hobby/"+hobbyDTO2.getName());
+
+        Response response = given().when().get("/person/"+personDTO2.getId());
         ResponseBody body = response.getBody();
         System.out.println(body.prettyPrint());
 
-        hobbyDTO2.assignPerson(person1);
-        System.out.println(hobbyDTO2);
-        hobbyDTO2.setDescription("temporarily removed for update test");
-        String requestBody = GSON.toJson(hobbyDTO2);
+        person2.setLastName("blank");
+        person2.assignPhone(new Phone("44204420", "fastnet",personDTO2.getEntity()));
+        person2.assignHobby(hobbyDTO1.getEntity());
+        System.out.println(person2);
+        String requestBody = GSON.toJson(new PersonDTO(person2));
 
         given()
                 .header("Content-type", ContentType.JSON)
                 .body(requestBody)
                 .when()
-                .pathParam("name", hobbyDTO2.getName())
-                .put("/hobby/{name}")
+                .pathParam("id", personDTO2.getId())
+                .put("/person/{id}")
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .body("name", equalTo(hobbyDTO2.getName()))
-                .body("description", equalTo("temporarily removed for update test"))
-                .body("people", hasEntry(""+person2.getId(), person2.getFullName()))
-                .body("people", hasEntry(""+person1.getId(), person1.getFullName()));
+                .body("firstName", equalTo(personDTO1.getFirstName()))
+                .body("lastName", equalTo("blank"))
+                .body("email", equalTo(personDTO1.getEmail()))
+                .body("phones", hasEntry("number", equalTo(personDTO1.getPhones().get(0))))
+                .body("hobbies", hasEntry("name", equalTo(personDTO1.getHobbies().get(0).getName())));
 
-        System.out.println("After given");
-        Response response2 = given().when().get("/hobby/"+hobbyDTO2.getName());
-        ResponseBody body2 = response2.getBody();
-        System.out.println(body2.prettyPrint());
-
-//        given()
-//                .contentType(ContentType.JSON)
-//                .get("/hobby/{name}",hobbyDTO2.getName())
-//                .then()
-//                .assertThat()
-//                .statusCode(HttpStatus.OK_200.getStatusCode())
-//                .body("name", equalTo(hobbyDTO2.getName()))
-//                .body("description", equalTo(hobbyDTO2.getDescription()))
-//                .body("category", equalTo(hobbyDTO2.getCategory()))
-//                .body("type", equalTo(hobbyDTO2.getType()))
-//                .body("people", hasEntry(""+person2.getId(), person2.getFirstName()+" "+person2.getLastName()));
-//
     }
 
     @Test
-    public void testDeleteHobby() {
+    public void testDeletePerson() {
         given()
                 .contentType(ContentType.JSON)
-                .pathParam("name", hobbyDTO2.getName())
-                .delete("/hobby/{name}")
+                .pathParam("id", personDTO2.getId())
+                .delete("/person/{id}")
                 .then()
                 .statusCode(200);
     }
@@ -291,39 +281,41 @@ class HobbyResourceTest {
     @Test
     public void testToString() {
         System.out.println("Check if obj.toString() creates the right output");
-        String str = hobbyDTO1.toString();
-        assertThat(hobbyDTO1,hasToString(str));
+        String str = personDTO1.toString();
+        assertThat(personDTO1,hasToString(str));
     }
 
     @Test
-    public void testGetCountOfAllMembers() {
+    public void testGetByPhoneNumber()  {
         given()
-                .when()
-                .get("/hobby/count")
+                .contentType(ContentType.JSON)
+                .get("/person/phone/{number}",personDTO1.getPhones().get(0).getNumber())
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("Skuespil", equalTo(1))
-                .body("Akrobatik", equalTo(1));
-
-        Response response = given().when().get("/hobby/count");
-        ResponseBody body = response.getBody();
-        System.out.println(body.prettyPrint());
+                .body("firstName", equalTo(personDTO1.getFirstName()))
+                .body("lastName", equalTo(personDTO1.getLastName()))
+                .body("email", equalTo(personDTO1.getEmail()))
+                .body("phones", hasEntry("number", equalTo(personDTO1.getPhones().get(0))))
+                .body("address", hasEntry("id", equalTo(personDTO1.getAddress().getId())))
+                .body("hobbies", hasEntry("name", equalTo(personDTO1.getHobbies().get(0).getName())));
     }
 
     @Test
-    public void testGetCountOfMembersForHobby() {
-        Response response = given().when().get("/hobby/{name}", hobbyDTO2.getName());
-        ResponseBody body = response.getBody();
-        System.out.println(body.prettyPrint());
+    public void getAllByZipCode() throws Exception {
+        List<PersonDTO> personDTOS;
 
-        given()
+        personDTOS = given()
+                .contentType("application/json")
                 .when()
-                .get("/hobby/{name}/count", hobbyDTO2.getName())
+                .get("/person/city/{zipCode}", "1000")
                 .then()
-                .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("Skuespil", equalTo(1));
+                .extract().body().jsonPath().getList("", PersonDTO.class);
+
+        //        HobbyDTO h1DTO = new HobbyDTO(ho);
+        //        HobbyDTO h2DTO = new HobbyDTO(p2);
+        assertThat(personDTOS, containsInAnyOrder(personDTO1));
+        System.out.println(personDTOS);
     }
 
 

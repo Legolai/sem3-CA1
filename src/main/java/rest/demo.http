@@ -15,3 +15,7 @@ GET http://localhost:8080/devops_starter_war_exploded/api/hobby
 PUT http://localhost:8080/devops_starter_war_exploded/api/hobby/Akrobatik
 
 {"name": "Akrobatik", "description": "this should be link to wiki", "category": "Generel", "type": "Indendørs", "people": {"1":"Jens Jensen", "2": "Mads Madsen"}}
+
+###
+GET http://localhost:8080/devops_starter_war_exploded/api/person
+
