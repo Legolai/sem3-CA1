@@ -88,11 +88,10 @@ public class PersonFacade implements IDataFacade<Person, Integer> {
         });
     }
 
-    public List<Person> getAllByCityInfo(CityInfo cityInfo) {
+    public List<Person> getAllByCityInfo(String zipCode) {
         return executeWithClose(em -> {
-            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address a JOIN a.cityInfo c WHERE c.city = :city AND c.zipCode = :zipCode", Person.class);
-            query.setParameter("city", cityInfo.getCity());
-            query.setParameter("zipCode", cityInfo.getZipCode());
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address a JOIN a.cityInfo c WHERE c.zipCode = :zipCode", Person.class);
+            query.setParameter("zipCode", zipCode);
             return query.getResultList();
         });
     }
