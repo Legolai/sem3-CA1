@@ -1,7 +1,5 @@
 package datafacades;
 
-import errorhandling.EntityNotFoundException;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.util.List;
