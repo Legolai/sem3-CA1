@@ -82,4 +82,13 @@ public class AddressFacade implements IDataFacade<Address, Integer>{
             em.remove(a);
         });
     }
+
+    public List<Address> getAllByZipCode(String zipCode) {
+        return executeWithClose((em) -> {
+            TypedQuery<Address> query = em.createQuery("SELECT a FROM Address a where a.cityInfo.zipCode = :zipcode", Address.class);
+            query.setParameter("zipcode", zipCode);
+            List<Address> addresses = query.getResultList();
+            return addresses;
+        });
+    }
 }

@@ -49,4 +49,8 @@ public class AddressDTOFacade implements IDataDTOFacade<AddressDTO, Integer> {
     public void delete(Integer id) {
         addressFacade.delete(id);
     }
+
+    public List<AddressDTO> getAllByZipCode(String zipCode) {
+        return AddressDTO.toList(addressFacade.getAllByZipCode(zipCode));
+    }
 }
