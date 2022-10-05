@@ -11,6 +11,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
@@ -24,14 +25,14 @@ public class CityResource {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAll() {
-        return Response.ok().entity(GSON.toJson(FACADE.getAll())).build();
+        return Response.ok().entity(GSON.toJson(FACADE.getAll())).type(MediaType.APPLICATION_JSON_TYPE.withCharset(StandardCharsets.UTF_8.name())).build();
     }
 
     @GET
     @Path("/{zipCode}/addresses")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getById(@PathParam("zipCode") String zipCode) throws EntityNotFoundException {
-        return Response.ok().entity(GSON.toJson(addressFACADE.getAllByZipCode(zipCode))).build();
+        return Response.ok().entity(GSON.toJson(addressFACADE.getAllByZipCode(zipCode))).type(MediaType.APPLICATION_JSON_TYPE.withCharset(StandardCharsets.UTF_8.name())).build();
     }
 
     @POST
@@ -40,7 +41,7 @@ public class CityResource {
     public Response create(String content) {
         CityInfoDTO cityInfoDTO = GSON.fromJson(content, CityInfoDTO.class);
         CityInfoDTO newCityInfoDTO = FACADE.create(cityInfoDTO);
-        return Response.ok().entity(GSON.toJson(newCityInfoDTO)).build();
+        return Response.ok().entity(GSON.toJson(newCityInfoDTO)).type(MediaType.APPLICATION_JSON_TYPE.withCharset(StandardCharsets.UTF_8.name())).build();
     }
 
     @PUT
@@ -50,7 +51,7 @@ public class CityResource {
     public Response update(@PathParam("zipCode") String zipCode, String cityInfo) throws EntityNotFoundException {
         CityInfoDTO cityInfoDTO = GSON.fromJson(cityInfo, CityInfoDTO.class);
         CityInfoDTO updated = FACADE.update(cityInfoDTO);
-        return Response.ok().entity(GSON.toJson(updated)).build();
+        return Response.ok().entity(GSON.toJson(updated)).type(MediaType.APPLICATION_JSON_TYPE.withCharset(StandardCharsets.UTF_8.name())).build();
     }
 
     @DELETE
@@ -59,7 +60,7 @@ public class CityResource {
     public Response delete(@PathParam("zipCode") String zipCode) throws EntityNotFoundException {
         FACADE.delete(zipCode);
         //CityInfoDTO deleted = FACADE.delete(zipCode);
-        return Response.ok().build(); //.entity(GSON.toJson(deleted)).build();
+        return Response.ok().type(MediaType.APPLICATION_JSON_TYPE.withCharset(StandardCharsets.UTF_8.name())).build(); //.entity(GSON.toJson(deleted)).build();
     }
 
 //    @GET
