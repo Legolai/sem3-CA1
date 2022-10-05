@@ -83,6 +83,7 @@ public class Person {
     }
 
     public void assignPhone(Phone phone) {
+        if (phone == null) return;
         this.phones.add(phone);
     }
     public void setPhones(Set<Phone> phones) {

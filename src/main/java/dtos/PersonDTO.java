@@ -58,10 +58,22 @@ public class PersonDTO {
         person.setLastName(this.lastName);
         person.setEmail(this.email);
         person.setAddress(this.address.getEntity());
-        person.setPhones(this.phones.stream().map(PhoneDTO::getEntity).collect(Collectors.toSet()));
+        person.setPhones(this.phones.stream().map(phoneDTO -> {
+            Phone phone = phoneDTO.getEntity();
+            phone.setPerson(person);
+            return phone;
+        }).collect(Collectors.toSet()));
         person.setHobbies(this.hobbies.stream().map(HobbyDTO::getEntity).collect(Collectors.toSet()));
 
         return person;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFirstName() {
