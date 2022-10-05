@@ -55,14 +55,14 @@ class HobbyDTOFacadeTest {
         person1.setLastName("Jensen");
         person1.setEmail("Jensen@email.com");
         person1.setAddress(new Address("Møllevej 18", null, null, cityInfo1));
-        person1.setPhones(new LinkedHashSet<>(List.of(new Phone("20203040", "mobil", person1))));
+        person1.assignPhone(new Phone("20203040", "mobil", person1));
         person1.assignHobby(hobby1);
         person2 = new Person();
         person2.setFirstName("Mads");
         person2.setLastName("Madsen");
         person2.setEmail("Madsen@email.com");
         person2.setAddress(new Address("Strandvejen 4", null, null, cityInfo2));
-        person2.setPhones(new LinkedHashSet<>(List.of(new Phone("40993040", "mobil", person1))));
+        person2.assignPhone(new Phone("40993040", "mobil", person2));
         person2.assignHobby(hobby2);
 
 
