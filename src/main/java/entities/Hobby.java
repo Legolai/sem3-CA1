@@ -11,7 +11,7 @@ public class Hobby {
     @Id
     @Column(name = "name", nullable = false, length = 45)
     private String name;
-    @Column(name = "description", nullable = false, length = 45)
+    @Column(name = "description", nullable = false)
     private String description;
     @Column(name = "category", nullable = false, length = 45)
     private String category;
