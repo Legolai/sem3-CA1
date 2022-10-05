@@ -131,20 +131,20 @@ class PersonResourceTest {
     @Test
     public void testServerIsUp() {
         System.out.println("Testing is server UP");
-        given().when().get("/hobby").then().statusCode(200);
+        given().when().get("/person").then().statusCode(200);
     }
     @Test
     public void testLogRequest() {
         System.out.println("Testing logging request details");
         given().log().all()
-                .when().get("/hobby")
+                .when().get("/person")
                 .then().statusCode(200);
     }
     @Test
     public void testLogResponse() {
         System.out.println("Testing logging response details");
         given()
-                .when().get("/hobby")
+                .when().get("/person")
                 .then().log().body().statusCode(200);
     }
 
@@ -159,9 +159,9 @@ class PersonResourceTest {
                 .body("firstName", equalTo(personDTO1.getFirstName()))
                 .body("lastName", equalTo(personDTO1.getLastName()))
                 .body("email", equalTo(personDTO1.getEmail()))
-                .body("phones", hasEntry("number", equalTo(personDTO1.getPhones().get(0))))
-                .body("address", hasEntry("id", equalTo(personDTO1.getAddress().getId())))
-                .body("hobbies", hasEntry("name", equalTo(personDTO1.getHobbies().get(0).getName())));
+                .body("phones", hasItem(hasEntry("number", personDTO1.getPhones().get(0).getNumber())))
+                .body("address", hasEntry("id", personDTO1.getAddress().getId()))
+                .body("hobbies", hasItem(hasEntry("name", personDTO1.getHobbies().get(0).getName())));
     }
 
     //TODO: This for later, when we do error handling
@@ -230,39 +230,50 @@ class PersonResourceTest {
                 .body("firstName", equalTo("Michael"))
                 .body("lastName", equalTo("Xu"))
                 .body("email", equalTo("michael@mail.com"))
-                .body("phones", hasEntry("number", equalTo("60608080")))
-                .body("address", hasEntry("street", equalTo("Kaffevej 47")))
-                .body("hobbies", hasEntry("name", equalTo(hobbyDTO1.getName())));
+                .body("phones", contains(hasEntry("number", "60608080")))
+                .body("address", hasEntry("street", "Kaffevej 47"))
+                .body("hobbies", contains(hasEntry("name", hobbyDTO1.getName())));
+//
     }
 
     @Test
     public void updateTest() {
         System.out.println("Start of update test");
+        Person person = new Person();
+        person.setFirstName(person2.getFirstName());
+        person.setLastName(person2.getLastName());
+        person.setEmail(person2.getEmail());
+        person.setAddress(person2.getAddress());
+//        person.setHobbies(person2.getHobbies());
 
-        Response response = given().when().get("/person/"+personDTO2.getId());
-        ResponseBody body = response.getBody();
-        System.out.println(body.prettyPrint());
+        String createRequestBody = GSON.toJson(new PersonDTO(person));
 
-        person2.setLastName("blank");
-        person2.assignPhone(new Phone("44204420", "fastnet",personDTO2.getEntity()));
-        person2.assignHobby(hobbyDTO1.getEntity());
-        System.out.println(person2);
-        String requestBody = GSON.toJson(new PersonDTO(person2));
+        PersonDTO created = given()
+                .header("Content-type", ContentType.JSON)
+                .body(createRequestBody)
+                .when().post("/person").andReturn().as(PersonDTO.class);
+
+        person.setId(created.getId());
+        person.setLastName("blank");
+        person.assignPhone(new Phone("44204420", "fastnet", null));
+        person.assignHobby(hobbyDTO1.getEntity());
+        created = new PersonDTO(person);
+        String requestBody = GSON.toJson(created);
 
         given()
                 .header("Content-type", ContentType.JSON)
                 .body(requestBody)
                 .when()
-                .pathParam("id", personDTO2.getId())
+                .pathParam("id", created.getId())
                 .put("/person/{id}")
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .body("firstName", equalTo(personDTO1.getFirstName()))
+                .body("firstName", equalTo(created.getFirstName()))
                 .body("lastName", equalTo("blank"))
-                .body("email", equalTo(personDTO1.getEmail()))
-                .body("phones", hasEntry("number", equalTo(personDTO1.getPhones().get(0))))
-                .body("hobbies", hasEntry("name", equalTo(personDTO1.getHobbies().get(0).getName())));
+                .body("email", equalTo(created.getEmail()))
+                .body("phones", hasItem(hasEntry("number", created.getPhones().stream().findFirst().get().getNumber())))
+                .body("hobbies", hasItem(hasEntry("name", created.getHobbies().stream().findFirst().get().getName())));
 
     }
 
@@ -296,9 +307,9 @@ class PersonResourceTest {
                 .body("firstName", equalTo(personDTO1.getFirstName()))
                 .body("lastName", equalTo(personDTO1.getLastName()))
                 .body("email", equalTo(personDTO1.getEmail()))
-                .body("phones", hasEntry("number", equalTo(personDTO1.getPhones().get(0))))
-                .body("address", hasEntry("id", equalTo(personDTO1.getAddress().getId())))
-                .body("hobbies", hasEntry("name", equalTo(personDTO1.getHobbies().get(0).getName())));
+                .body("phones", hasItem(hasEntry("number", personDTO1.getPhones().get(0).getNumber())))
+                .body("address", hasEntry("id", personDTO1.getAddress().getId()))
+                .body("hobbies", hasItem(hasEntry("name", personDTO1.getHobbies().get(0).getName())));
     }
 
     @Test
