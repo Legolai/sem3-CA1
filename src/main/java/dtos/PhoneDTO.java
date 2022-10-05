@@ -11,8 +11,6 @@ public class PhoneDTO {
     private String number;
     private String description;
 
-
-
     public PhoneDTO(String number, String description) {
         this.number = number;
         this.description = description;
