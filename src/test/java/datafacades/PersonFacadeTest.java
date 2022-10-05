@@ -105,7 +105,7 @@ class PersonFacadeTest {
 
     @Test
     void testShouldGetPersonsByCityInfo() {
-        List<Person> persons = facade.getAllByCityInfo(new CityInfo("4000", "Helsingør"));
+        List<Person> persons = facade.getAllByCityInfo("4000");
         assertEquals(1, persons.size());
         assertEquals(person2, persons.get(0));
     }
