@@ -41,7 +41,7 @@ class CityResourceTest {
     private static HttpServer httpServer;
     private static EntityManagerFactory emf;
 
-    private CityInfoDTO cityDTO1, cityDTO2;
+    private CityInfoDTO cityDTO1, cityDTO2, cityDTO3;
     private AddressDTO addressDTO1, addressDTO2;
 
     static HttpServer startServer() {
@@ -98,6 +98,7 @@ class CityResourceTest {
         } finally {
             cityDTO1 = new CityInfoDTO(cityInfo1);
             cityDTO2 = new CityInfoDTO(cityInfo2);
+            cityDTO3 = new CityInfoDTO(cityInfo3);
             addressDTO1 = new AddressDTO(address1);
             addressDTO2 = new AddressDTO(address2);
             em.close();
@@ -137,7 +138,7 @@ class CityResourceTest {
 
 //        HobbyDTO h1DTO = new HobbyDTO(ho);
 //        HobbyDTO h2DTO = new HobbyDTO(p2);
-        assertThat(cityDTOs, containsInAnyOrder(cityDTO1, cityDTO2));
+        assertThat(cityDTOs, containsInAnyOrder(cityDTO1, cityDTO2, cityDTO3));
     }
 
     @Test
