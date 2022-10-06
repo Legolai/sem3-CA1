@@ -4,6 +4,7 @@ import datafacades.HobbyFacade;
 import datafacades.PersonFacade;
 import dtos.PersonDTO;
 import entities.Person;
+import errorhandling.EntityNotFoundException;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
@@ -30,11 +31,11 @@ public class PersonDTOFacade implements IDataDTOFacade<PersonDTO, Integer> {
     }
 
     @Override
-    public PersonDTO getById(Integer id) {
+    public PersonDTO getById(Integer id) throws EntityNotFoundException {
         return new PersonDTO(personFacade.getById(id));
     }
 
-    public PersonDTO getByPhoneNumber(String phoneNumber) {
+    public PersonDTO getByPhoneNumber(String phoneNumber) throws EntityNotFoundException {
         return new PersonDTO(personFacade.getByPhoneNumber(phoneNumber));
     }
 
@@ -44,12 +45,12 @@ public class PersonDTOFacade implements IDataDTOFacade<PersonDTO, Integer> {
     }
 
     @Override
-    public PersonDTO update(PersonDTO personDTO) {
+    public PersonDTO update(PersonDTO personDTO) throws EntityNotFoundException {
         return new PersonDTO(personFacade.update(personDTO.getEntity()));
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Integer id) throws EntityNotFoundException {
         personFacade.delete(id);
     }
 

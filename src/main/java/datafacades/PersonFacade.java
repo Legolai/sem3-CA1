@@ -1,10 +1,10 @@
 package datafacades;
 
 import entities.*;
+import errorhandling.EntityNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Set;
@@ -67,17 +67,23 @@ public class PersonFacade implements IDataFacade<Person, Integer> {
     }
 
     @Override
-    public Person getById(Integer id) {
-        return executeWithClose(em -> em.find(Person.class, id));
+    public Person getById(Integer id) throws EntityNotFoundException {
+        Person person = executeWithClose(em -> em.find(Person.class, id));
+        if (person == null)
+            throw new EntityNotFoundException("Person with id " + id + " does not exists!");
+        return person;
     }
 
 
-    public Person getByPhoneNumber(String phoneNumber) {
-        return executeWithClose(em -> {
+    public Person getByPhoneNumber(String phoneNumber) throws EntityNotFoundException {
+        Person person = executeWithClose(em -> {
             TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.phones ph where ph.number = :number", Person.class);
             query.setParameter("number", phoneNumber);
             return query.getSingleResult();
         });
+        if (person == null)
+            throw new EntityNotFoundException("Person with phone number " + phoneNumber + " does not exists!");
+        return person;
     }
 
     public List<Person> getAllByHobby(String hobbyName) {
@@ -105,10 +111,14 @@ public class PersonFacade implements IDataFacade<Person, Integer> {
     }
 
     @Override
-    public Person update(Person person) {
+    public Person update(Person person) throws EntityNotFoundException{
         executeInsideTransaction(em -> {
             Person toUpdate = em.find(Person.class, person.getId());
-            if (toUpdate == null ) throw new EntityNotFoundException();
+            if (toUpdate == null ) try {
+                throw new EntityNotFoundException("Could not update as Person with id: "+person.getId()+" does not exist!");
+            } catch (EntityNotFoundException e) {
+                e.printStackTrace();
+            }
             toUpdate.setFirstName(person.getFirstName());
             toUpdate.setLastName(person.getLastName());
             toUpdate.setEmail(person.getEmail());
@@ -121,10 +131,10 @@ public class PersonFacade implements IDataFacade<Person, Integer> {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Integer id) throws EntityNotFoundException{
+        getById(id);
         executeInsideTransaction(em -> {
             Person p = em.find(Person.class, id);
-            if (p == null) throw new EntityNotFoundException();
             em.remove(p);
         });
     }

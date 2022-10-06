@@ -106,7 +106,7 @@ class AddressDTOFacadeTest {
     }
 
     @Test
-    void testShouldDeleteAddressById() {
+    void testShouldDeleteAddressById() throws errorhandling.EntityNotFoundException {
         assertThrows(EntityNotFoundException.class, () -> facade.delete(10));
         personFacade.delete(person1.getId());
         List<AddressDTO> addresses = facade.getAll();

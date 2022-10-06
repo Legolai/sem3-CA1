@@ -1,10 +1,10 @@
 package datafacades;
 
 import entities.CityInfo;
+import errorhandling.EntityNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class CityInfoFacade implements IDataFacade<CityInfo, String>{
     }
 
     @Override
-    public CityInfo getById(String zipCode) {
+    public CityInfo getById(String zipCode) throws EntityNotFoundException {
         CityInfo ci =  executeWithClose((em) -> em.find(CityInfo.class, zipCode));
         if (ci == null)
             throw new EntityNotFoundException("The CityInfo entity with zipCode: "+zipCode+" Was not found");
@@ -59,9 +59,9 @@ public class CityInfoFacade implements IDataFacade<CityInfo, String>{
     }
 
     @Override
-    public CityInfo update(CityInfo cityInfo) {
+    public CityInfo update(CityInfo cityInfo) throws EntityNotFoundException {
         if (cityInfo.getZipCode() == null)
-            throw new IllegalArgumentException("No CityInfo can be updated when zipCode is missing");
+            throw new EntityNotFoundException("No CityInfo can be updated when zipCode is missing");
         CityInfo check = executeWithClose((em) -> em.find(CityInfo.class, cityInfo.getZipCode()));
         if (check == null)
             throw new EntityNotFoundException("No CityInfo with the zipCode: "+cityInfo.getZipCode());
@@ -73,11 +73,10 @@ public class CityInfoFacade implements IDataFacade<CityInfo, String>{
     }
 
     @Override
-    public void delete(String zipCode) {
+    public void delete(String zipCode) throws EntityNotFoundException{
+        getById(zipCode);
         executeInsideTransaction((em) -> {
             CityInfo ci =  em.find(CityInfo.class, zipCode);
-            if (ci == null)
-                throw new EntityNotFoundException("The CityInfo entity with zipCode: "+zipCode+" Was not found");
             em.remove(ci);
         });
     }

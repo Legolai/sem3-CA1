@@ -1,5 +1,7 @@
 package datafacades;
 
+import errorhandling.EntityNotFoundException;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.util.List;
@@ -10,10 +12,10 @@ public interface IDataFacade<T, I> {
     EntityManager getEntityManager();
 
     T create(T t);
-    T getById(I id); //throws EntityNotFoundException;
+    T getById(I id) throws EntityNotFoundException; //throws EntityNotFoundException;
     List<T> getAll();
-    T update(T t); // throws EntityNotFoundException;
-    void delete(I id); // throws EntityNotFoundException;
+    T update(T t) throws EntityNotFoundException; // throws EntityNotFoundException;
+    void delete(I id) throws EntityNotFoundException; // throws EntityNotFoundException;
 
     default  <R> R executeWithClose(Function<EntityManager, R> action) {
         EntityManager em = getEntityManager();
