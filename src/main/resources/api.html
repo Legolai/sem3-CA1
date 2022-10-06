@@ -1,29 +1,326 @@
 <!DOCTYPE>
 <html lang="en">
-    <head>
-        <title>api</title>
-    </head>
-    <body>
-        <h1>Api Doc</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Method</th>
-                    <th>URL</th>
-                    <th>Request Body (JSON)</th>
-                    <th>Response (JSON)</th>
-                    <th>Error (e)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>GET</td>
-                    <td>/api/users</td>
-                    <td></td>
-                    <td>[user, user, ...]</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-    </body>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>api</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;;
+        }
+        .codeBlock {
+            background: #eeeeee;
+            width: clamp(100px, 50%, 400px);
+            margin: 10px;
+            padding: 0 15px;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="markdown-body">
+    <h3>Endpoints for Person</h3>
+    <div class="table-responsive-md">
+    <table class="table table-striped " role="table">
+        <thead>
+            <tr>
+                <th scope="col">Method</th>
+                <th scope="col">URL</th>
+                <th scope="col">Request Body (JSON)</th>
+                <th scope="col">Response</th>
+                <th scope="col">Response (JSON)</th>
+                <th scope="col">Error (e)</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            <tr>
+                <td>POST</td>
+                <td>/api/person</td>
+                <td>person(1) without ID</td>
+                <td>Newly created person with id</td>
+                <td>person(1)&nbsp;</td>
+                <td>(e2)</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/person</td>
+                <td>&nbsp;</td>
+                <td>A list of all persons</td>
+                <td>[person, person, ...](1)</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/person/{id}&nbsp;</td>
+                <td>id: a person ID</td>
+                <td>person with given id</td>
+                <td>person(1)</td>
+                <td>(e1)</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/person/phone/{phoneNumber}&nbsp;</td>
+                <td>phoneNumber: A phoneNumber</td>
+                <td>&nbsp;person with given phoneNumber</td>
+                <td>person(1)&nbsp;</td>
+                <td>(e1)</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/person/city/{zipCode}/</td>
+                <td>zipcode: zipCode of a city</td>
+                <td>List of all persons city with given zipCode</td>
+                <td>[person, person, ... ](1)</td>
+                <td>(e1)</td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>/api/person/{id}</td>
+                <td>Id: A person ID and a person(1) without ID</td>
+                <td>Updated person</td>
+                <td>person(1)</td>
+                <td>(e2)</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/api/person/{id}</td>
+                <td>Id: A person ID</td>
+                <td>Status 200</td>
+                <td></td>
+                <td>(e2)</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    <h3>Endpoints for City, CityInfo and Address</h3>
+    <div class="table-responsive-md">
+    <table class="table table-striped" role="table">
+        <thead>
+            <tr>
+                <th>Method</th>
+                <th>URL</th>
+                <th>Request Body (JSON)</th>
+                <th>Response&nbsp;</th>
+                <th>Response (JSON)</th>
+                <th>Error (e)</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            <tr>
+                <td>GET</td>
+                <td>/api/city</td>
+                <td></td>
+                <td>List of all cities</td>
+                <td>[cityInfo, cityInfo, ... ](2)</td>
+                <td>(e1)</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/city/{zipCode}/addresses</td>
+                <td></td>
+                <td>List of all addresses within a give zip code</td>
+                <td>[address, address, ... ](4)</td>
+                <td>(e1)</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/api/city</td>
+                <td>cityInfo</td>
+                <td>A newly created city</td>
+                <td>&nbsp;cityInfo(2)</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>/api/city/{zipCode}</td>
+                <td>zipCode: zipCode of a city and cityInfo</td>
+                <td>A updated created city</td>
+                <td>&nbsp;cityInfo(2)</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/api/city</td>
+                <td>cityInfo</td>
+                <td>Status 200</td>
+                <td>&nbsp;</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/api/address/{id}</td>
+                <td>AddressId: An address id</td>
+                <td>Status 200</td>
+                <td></td>
+                <td>(e1)</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    <h3>Endpoints for Hobby</h3>
+    <div class="table-responsive-md">
+    <table class="table table-striped" role="table">
+        <thead>
+            <tr>
+                <th>Method</th>
+                <th>URL</th>
+                <th>Request Body (JSON)</th>
+                <th>Response&nbsp;</th>
+                <th>Response (JSON)</th>
+                <th>Error (e)</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            <tr>
+                <td>POST</td>
+                <td>/api/hobby</td>
+                <td>Hobby(5)&nbsp;</td>
+                <td>Newly created Hobby(5)</td>
+                <td>Hobby(5)</td>
+                <td>(e2)</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/hobby</td>
+                <td></td>
+                <td>List of all hobbies</td>
+                <td>[hobby, hobby, ...](5)</td>
+                <td>(e2)</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/hobby/count</td>
+                <td></td>
+                <td>List of sets with name of Hobby and number of Persons</td>
+                <td>[<em>name</em>: number, <em>name</em>: number, ... ]</td>
+                <td>(e1)</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/hobby/{name}&nbsp;</td>
+                <td>Name: name of a hobby</td>
+                <td>List of persons for a specific hobby</td>
+                <td>[person, person, ...]</td>
+                <td>(e1)</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/hobby/{name}/count</td>
+                <td>Name: name of a hobby</td>
+                <td>Number of people for a specific hobby</td>
+                <td>count of persons</td>
+                <td>(e1)</td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>/api/hobby/{name}</td>
+                <td>Name: name of a hobby&nbsp;</td>
+                <td>updated Hobby</td>
+                <td>Hobby(5)</td>
+                <td>(e2)</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/api/hobby/{name}</td>
+                <td>Name: name of a hobby&nbsp;</td>
+                <td>Status 200</td>
+                <td>Hobby(5)</td>
+                <td>(e2)</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    <h2><strong>Request Body and Response Formats</strong></h2>
+    <p>(1) Person format (don’t provide ID, for POST)</p>
+    <div class="codeBlock">
+        <pre>
+            <code>
+{
+  "email": String (email),
+  "firstName": String,
+  "lastName": String,
+  "phone": [{
+    "number": String,
+    "description": String
+  }, ...],
+  "address": {
+    "street": String,
+    "floor": String,
+    "door": String,
+    "cityInfo": {
+      "zipCode": String,
+      "city": String
+    }
+  }
+}
+            </code>
+        </pre>
+    </div>
+
+    <p>(2) CityInfo format</p>
+    <div class="codeBlock">
+        <pre>
+            <code>
+{
+  "zipCode": String,
+  "city": String
+}</code>
+        </pre>
+    </div>
+    <p>(3) CityInfo format with addresses</p>
+    <div class="codeBlock">
+        <pre>
+            <code>
+{
+  "zipCode": String,
+  "city": String
+  "addresses: [
+    {
+     "street": String,
+     "floor": String,
+     "door": String,
+    }, ...
+  ]
+ }</code>
+        </pre>
+    </div>
+    <p>(4) Address format</p>
+    <div class="codeBlock">
+        <pre>
+            <code>
+{
+  "street": String,
+  "floor": String,
+  "door": String,
+  "cityInfo": {
+    "zipCode": String,
+    "city": String
+  }
+}</code>
+        </pre>
+
+    </div>
+    <p>(5) Hobby</p>
+    <div class="codeBlock">
+        <pre>
+            <code>
+{
+  name: String,
+  description: String,
+  category: String,
+  type: String
+}</code>
+        </pre>
+    </div>
+    <h2><strong>Errors</strong></h2>
+    <p>(e) All errors are reported using this format (with the HTTP-status code matching the number)<br>
+        { status : statusCode, "msg": "Explains the problem" }</p>
+    <p>(e1) :{ status : 404, "msg": "No content found for this request" }<br>
+        (e2) :{ status : 400, "msg": "Field ‘xxx’ is required" } (for example, no name provided)</p>
+
+</div>
+</body>
 </html>
