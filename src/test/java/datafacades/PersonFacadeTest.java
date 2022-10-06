@@ -1,6 +1,7 @@
 package datafacades;
 
 import entities.*;
+import errorhandling.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 
@@ -99,7 +100,7 @@ class PersonFacadeTest {
     }
 
     @Test
-    void testShouldUpdateName() {
+    void testShouldUpdateName() throws EntityNotFoundException {
         Hobby hobby = new Hobby();
         hobby.setName("Skuespil");
         hobby.setDescription("https://en.wikipedia.org/wiki/Acting");
@@ -123,7 +124,7 @@ class PersonFacadeTest {
     }
 
     @Test
-    void testShouldGetPersonByPhoneNumber() {
+    void testShouldGetPersonByPhoneNumber() throws EntityNotFoundException {
         Person person = facade.getByPhoneNumber(person1.getPhones().stream().findFirst().get().getNumber());
         assertEquals(person1, person);
     }

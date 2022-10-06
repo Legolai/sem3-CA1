@@ -4,6 +4,7 @@ import datafacades.HobbyFacade;
 import datafacades.PersonFacade;
 import dtos.HobbyDTO;
 import entities.Hobby;
+import errorhandling.EntityNotFoundException;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
@@ -40,7 +41,7 @@ public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO, String> {
     }
 
     @Override
-    public HobbyDTO getById(String name) {
+    public HobbyDTO getById(String name) throws EntityNotFoundException {
         return new HobbyDTO(hobbyFacade.getById(name));
     }
 
@@ -50,7 +51,7 @@ public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO, String> {
     }
 
     @Override
-    public HobbyDTO update(HobbyDTO hobbyDTO) {
+    public HobbyDTO update(HobbyDTO hobbyDTO) throws EntityNotFoundException {
         Hobby h;
         if (hobbyDTO.getPeople().isEmpty()) {
             h = hobbyFacade.update(hobbyDTO.getEntity());
@@ -65,7 +66,7 @@ public class HobbyDTOFacade implements IDataDTOFacade<HobbyDTO, String> {
     }
 
     @Override
-    public void delete(String name) {
+    public void delete(String name) throws EntityNotFoundException {
         hobbyFacade.delete(name);
     }
 

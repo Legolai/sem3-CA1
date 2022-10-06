@@ -75,10 +75,9 @@ public class AddressFacade implements IDataFacade<Address, Integer>{
 
     @Override
     public void delete(Integer id) {
+        getById(id);
         executeInsideTransaction((em) -> {
-            Address a =  em.find(Address.class, id);
-            if (a == null)
-                throw new EntityNotFoundException("The Address entity with id: "+id+" Was not found");
+            Address a = em.find(Address.class, id);
             em.remove(a);
         });
     }

@@ -1,6 +1,7 @@
 package datafacades;
 
 import entities.CityInfo;
+import errorhandling.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 
@@ -69,7 +70,7 @@ class CityInfoFacadeTest {
     }
 
     @Test
-    void getById() {
+    void getById() throws EntityNotFoundException {
         System.out.println("Testing getbyid(id)");
         CityInfo expected = ci1;
         CityInfo actual = facade.getById(ci1.getZipCode());
@@ -85,7 +86,7 @@ class CityInfoFacadeTest {
     }
 
     @Test
-    void update() {
+    void update() throws EntityNotFoundException {
         System.out.println("Testing Update(CityInfo cityInfo)");
         ci2.setCity("updated city");
         CityInfo expected = ci2;
@@ -94,7 +95,7 @@ class CityInfoFacadeTest {
     }
 
     @Test
-    void delete() {
+    void delete() throws EntityNotFoundException {
         System.out.println("Testing delete(id)");
         facade.delete(ci3.getZipCode());
         int expected = 2;

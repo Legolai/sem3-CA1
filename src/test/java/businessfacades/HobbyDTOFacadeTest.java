@@ -3,12 +3,12 @@ package businessfacades;
 import datafacades.PersonFacade;
 import dtos.HobbyDTO;
 import entities.*;
+import errorhandling.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -105,14 +105,14 @@ class HobbyDTOFacadeTest {
     }
 
     @Test
-    void testShouldGetHobbyByName() {
+    void testShouldGetHobbyByName() throws EntityNotFoundException {
         assertThrows(EntityNotFoundException.class, () -> facade.getById("Amatørradio"));
         HobbyDTO hobby = facade.getById("Akrobatik");
         assertEquals(hobbyDTO1, hobby);
     }
 
     @Test
-    void testShouldDeleteHobby1() {
+    void testShouldDeleteHobby1() throws EntityNotFoundException {
         assertThrows(EntityNotFoundException.class, () -> facade.delete("Amatørradio"));
         facade.delete(hobbyDTO1.getName());
         List<HobbyDTO> hobbies = facade.getAll();
@@ -122,7 +122,7 @@ class HobbyDTOFacadeTest {
     }
 
     @Test
-    void testShouldUpdateHobby1() {
+    void testShouldUpdateHobby1() throws EntityNotFoundException {
         HobbyDTO hobby = new HobbyDTO("Amatørradio", "https://en.wikipedia.org/wiki/Amateur_radio",
                 "Generel", "Indendørs");
         assertThrows(EntityNotFoundException.class, () -> facade.update(hobby));

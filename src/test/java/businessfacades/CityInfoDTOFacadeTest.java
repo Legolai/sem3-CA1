@@ -4,12 +4,12 @@ import datafacades.PersonFacade;
 import dtos.CityInfoDTO;
 import dtos.HobbyDTO;
 import entities.*;
+import errorhandling.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -76,7 +76,7 @@ public class CityInfoDTOFacadeTest {
     }
 
     @Test
-    void testShouldGetCityInfoByZipCode() {
+    void testShouldGetCityInfoByZipCode() throws EntityNotFoundException {
         assertThrows(EntityNotFoundException.class, () -> facade.getById("3550"));
         assertDoesNotThrow(() -> facade.getById("4000"));
         CityInfoDTO cityInfoDTO = facade.getById("4000");
@@ -84,7 +84,7 @@ public class CityInfoDTOFacadeTest {
     }
 
     @Test
-    void testShouldUpdateCityInfo() {
+    void testShouldUpdateCityInfo() throws EntityNotFoundException {
         CityInfoDTO tmp = new CityInfoDTO("3550", "Slangerup");
         assertThrows(EntityNotFoundException.class, () -> facade.update(tmp));
         assertDoesNotThrow(() -> facade.update(new CityInfoDTO("4000", "København")));
