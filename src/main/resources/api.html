@@ -8,8 +8,11 @@
     <style>
         body {
             margin: 0;
-            padding: 0;
+            padding: 10px 15px;
             font-family: Arial, Helvetica, sans-serif;;
+        }
+        div > table {
+            padding: 100px;
         }
         .codeBlock {
             background: #eeeeee;
@@ -21,10 +24,10 @@
     </style>
 </head>
 <body>
-<div class="markdown-body">
+<div>
     <h3>Endpoints for Person</h3>
     <div class="table-responsive-md">
-    <table class="table table-striped " role="table">
+    <table class="table table-striped" role="table">
         <thead>
             <tr>
                 <th scope="col">Method</th>
@@ -238,24 +241,24 @@
     <div class="codeBlock">
         <pre>
             <code>
-{
-  "email": String (email),
-  "firstName": String,
-  "lastName": String,
-  "phone": [{
-    "number": String,
-    "description": String
-  }, ...],
-  "address": {
-    "street": String,
-    "floor": String,
-    "door": String,
-    "cityInfo": {
-      "zipCode": String,
-      "city": String
-    }
-  }
-}
+{<br>
+  "email": String (email),<br>
+  "firstName": String,<br>
+  "lastName": String,<br>
+  "phone": [{<br>
+    "number": String,<br>
+    "description": String<br>
+  }, ...],<br>
+  "address": {<br>
+    "street": String,<br>
+    "floor": String,<br>
+    "door": String,<br>
+    "cityInfo": {<br>
+      "zipCode": String,<br>
+      "city": String<br>
+    }<br>
+  }<br>
+}<br>
             </code>
         </pre>
     </div>
@@ -264,26 +267,26 @@
     <div class="codeBlock">
         <pre>
             <code>
-{
-  "zipCode": String,
-  "city": String
-}</code>
+{<br>
+  "zipCode": String,<br>
+  "city": String<br>
+}<br></code>
         </pre>
     </div>
     <p>(3) CityInfo format with addresses</p>
     <div class="codeBlock">
         <pre>
             <code>
-{
-  "zipCode": String,
-  "city": String
-  "addresses: [
-    {
-     "street": String,
-     "floor": String,
-     "door": String,
-    }, ...
-  ]
+{<br>
+  "zipCode": String,<br>
+  "city": String<br>
+  "addresses: [<br>
+    {<br>
+     "street": String,<br>
+     "floor": String,<br>
+     "door": String,<br>
+    }, ...<br>
+  ]<br>
  }</code>
         </pre>
     </div>
@@ -291,14 +294,14 @@
     <div class="codeBlock">
         <pre>
             <code>
-{
-  "street": String,
-  "floor": String,
-  "door": String,
-  "cityInfo": {
-    "zipCode": String,
-    "city": String
-  }
+{<br>
+  "street": String,<br>
+  "floor": String,<br>
+  "door": String,<br>
+  "cityInfo": {<br>
+    "zipCode": String,<br>
+    "city": String<br>
+  }<br>
 }</code>
         </pre>
 
@@ -307,19 +310,20 @@
     <div class="codeBlock">
         <pre>
             <code>
-{
-  name: String,
-  description: String,
-  category: String,
-  type: String
+{<br>
+  name: String,<br>
+  description: String,<br>
+  category: String,<br>
+  type: String<br>
 }</code>
         </pre>
     </div>
     <h2><strong>Errors</strong></h2>
     <p>(e) All errors are reported using this format (with the HTTP-status code matching the number)<br>
         { status : statusCode, "msg": "Explains the problem" }</p>
-    <p>(e1) :{ status : 404, "msg": "No content found for this request" }<br>
-        (e2) :{ status : 400, "msg": "Field ‘xxx’ is required" } (for example, no name provided)</p>
+    <p>
+        (e1) :{ status : 404, "msg": "(entity) with id (number) does not exists" }<br>
+    </p>
 
 </div>
 </body>
