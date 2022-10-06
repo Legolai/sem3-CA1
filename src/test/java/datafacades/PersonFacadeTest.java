@@ -99,6 +99,30 @@ class PersonFacadeTest {
     }
 
     @Test
+    void testShouldUpdateName() {
+        Hobby hobby = new Hobby();
+        hobby.setName("Skuespil");
+        hobby.setDescription("https://en.wikipedia.org/wiki/Acting");
+        hobby.setCategory("Generel");
+        hobby.setType("Indendørs");
+
+        CityInfo cityInfo1 = new CityInfo("1000", "København");
+
+        Person person = new Person();
+        person.setFirstName("Jens");
+        person.setLastName("Jensen");
+        person.setEmail("Jensen@email.com");
+        person.setAddress(new Address("Møllevej 18", null, null, cityInfo1));
+        person.assignPhone(new Phone("20203049", "mobil", person));
+        person.assignHobby(hobby);
+        person.setLastName("blank");
+        person = facade.create(person);
+        person.setLastName("blank");
+        Person updated = facade.update(person);
+        assertEquals(person.getLastName(), updated.getLastName());
+    }
+
+    @Test
     void testShouldGetPersonByPhoneNumber() {
         Person person = facade.getByPhoneNumber(person1.getPhones().stream().findFirst().get().getNumber());
         assertEquals(person1, person);

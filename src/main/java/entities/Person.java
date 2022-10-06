@@ -21,7 +21,7 @@ public class Person {
     @ManyToOne( fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "Address_id", nullable = false)
     private Address address;
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true, mappedBy = "person", cascade = CascadeType.ALL)
     private Set<Phone> phones = new LinkedHashSet<>();
     @ManyToMany(cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "Person_has_Hobby", joinColumns = @JoinColumn(name = "Person_id"), inverseJoinColumns = @JoinColumn(name = "Hobby_name"))
