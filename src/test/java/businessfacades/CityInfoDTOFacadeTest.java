@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CityInfoDTOFacadeTest {
     private static EntityManagerFactory emf;
     private static CityInfoDTOFacade facade;
-    CityInfo cityInfo1, cityInfo2;
+    private CityInfo cityInfo1, cityInfo2;
 
     @BeforeAll
     public static void setUpClass() {

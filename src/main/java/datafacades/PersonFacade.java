@@ -107,7 +107,14 @@ public class PersonFacade implements IDataFacade<Person, Integer> {
     @Override
     public Person update(Person person) {
         executeInsideTransaction(em -> {
-            if (em.find(Person.class, person.getId()) == null ) throw new EntityNotFoundException();
+            Person toUpdate = em.find(Person.class, person.getId());
+            if (toUpdate == null ) throw new EntityNotFoundException();
+            toUpdate.setFirstName(person.getFirstName());
+            toUpdate.setLastName(person.getLastName());
+            toUpdate.setEmail(person.getEmail());
+            toUpdate.setAddress(person.getAddress());
+            toUpdate.setHobbies(person.getHobbies());
+            toUpdate.setPhones(person.getPhones());
             em.merge(person);
         });
         return person;

@@ -114,12 +114,21 @@ public class PersonDTOFacadeTest {
 
     @Test
     void ShouldUpdatePerson() {
-        Person person = personDTO1.getEntity();
+        CityInfo cityInfo1 = new CityInfo("1000", "København");
+
+        Person person = new Person();
+        person.setFirstName("Jens");
+        person.setLastName("Jensen");
+        person.setEmail("Jensen@email.com");
+        person.setAddress(new Address("Møllevej 18", null, null, cityInfo1));
+        person.assignPhone(new Phone("20203049", "mobil", person));
+        person.setLastName("blank");
+        PersonDTO personDTO = facade.create(new PersonDTO(person));
         Hobby hobby = new Hobby("Akrobatik", "https://en.wikipedia.org/wiki/Acrobatics", "Generel", "Indendørs");
+        person = personDTO.getEntity();
         person.assignHobby(hobby);
-        PersonDTO personDTO = new PersonDTO(person);
-        facade.update(personDTO);
-        assertEquals(personDTO.getHobbies().get(0).getName(),facade.getById(personDTO1.getId()).getHobbies().get(0).getName());
+        PersonDTO updated = facade.update(new PersonDTO(person));
+        assertNotEquals(personDTO.getHobbies().size(),updated.getHobbies().size());
     }
 
     @Test
