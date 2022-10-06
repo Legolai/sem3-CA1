@@ -1,10 +1,10 @@
 package datafacades;
 
 import entities.Hobby;
+import errorhandling.EntityNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +53,7 @@ public class HobbyFacade implements IDataFacade<Hobby, String> {
     }
 
     @Override
-    public Hobby getById(String name) {
+    public Hobby getById(String name) throws EntityNotFoundException {
         Hobby hobby = executeWithClose(em -> em.find(Hobby.class, name));
         if (hobby == null)
             throw new EntityNotFoundException("Hobby called " + name + " does not exists!");
@@ -69,17 +69,18 @@ public class HobbyFacade implements IDataFacade<Hobby, String> {
     }
 
     @Override
-    public Hobby update(Hobby hobby) {
-        if (getById(hobby.getName()) == null) throw new EntityNotFoundException();
+    public Hobby update(Hobby hobby) throws EntityNotFoundException {
+        getById(hobby.getName()); // getById checks for hobby == nul and throws an exception
+        //if (getById(hobby.getName()) == null) throw new EntityNotFoundException("Cannot update hobby: "+hobby.getName()+" as it was not found in the database");
         executeInsideTransaction(em -> em.merge(hobby));
         return hobby;
     }
 
     @Override
-    public void delete(String name) {
+    public void delete(String name) throws EntityNotFoundException{
+        getById(name);
         executeInsideTransaction(em -> {
             Hobby hobby = em.find(Hobby.class, name);
-            if (hobby == null) throw new EntityNotFoundException("Hobby called " + name + " does not exists!");
             em.remove(hobby);
         });
     }

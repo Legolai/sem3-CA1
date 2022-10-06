@@ -2,12 +2,12 @@ package businessfacades;
 
 import dtos.PersonDTO;
 import entities.*;
+import errorhandling.EntityNotFoundException;
 import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityNotFoundException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -94,13 +94,13 @@ public class PersonDTOFacadeTest {
     }
 
     @Test
-    void ShouldGetById() {
+    void ShouldGetById() throws errorhandling.EntityNotFoundException {
         PersonDTO personDTO = facade.getById(personDTO1.getId());
         assertEquals(personDTO1, personDTO);
     }
 
     @Test
-    void ShouldGetByPhoneNumber() {
+    void ShouldGetByPhoneNumber() throws errorhandling.EntityNotFoundException {
         PersonDTO personDTO = facade.getByPhoneNumber(personDTO1.getPhones().get(0).getNumber());
         assertEquals(personDTO1, personDTO);
     }
@@ -113,7 +113,7 @@ public class PersonDTOFacadeTest {
     }
 
     @Test
-    void ShouldUpdatePerson() {
+    void ShouldUpdatePerson() throws errorhandling.EntityNotFoundException {
         CityInfo cityInfo1 = new CityInfo("1000", "København");
 
         Person person = new Person();

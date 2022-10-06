@@ -3,6 +3,7 @@ package businessfacades;
 import datafacades.CityInfoFacade;
 import datafacades.HobbyFacade;
 import dtos.CityInfoDTO;
+import errorhandling.EntityNotFoundException;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
@@ -27,7 +28,7 @@ public class CityInfoDTOFacade implements IDataDTOFacade<CityInfoDTO, String> {
     }
 
     @Override
-    public CityInfoDTO getById(String zipCode) {
+    public CityInfoDTO getById(String zipCode) throws EntityNotFoundException {
         return new CityInfoDTO(cityInfoFacade.getById(zipCode));
     }
 
@@ -37,12 +38,12 @@ public class CityInfoDTOFacade implements IDataDTOFacade<CityInfoDTO, String> {
     }
 
     @Override
-    public CityInfoDTO update(CityInfoDTO cityInfoDTO) {
+    public CityInfoDTO update(CityInfoDTO cityInfoDTO) throws EntityNotFoundException {
         return new CityInfoDTO(cityInfoFacade.update(cityInfoDTO.getEntity()));
     }
 
     @Override
-    public void delete(String zipCode) {
+    public void delete(String zipCode) throws EntityNotFoundException {
         cityInfoFacade.delete(zipCode);
     }
 
