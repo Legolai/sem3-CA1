@@ -58,12 +58,18 @@ public class PersonDTO {
         person.setLastName(this.lastName);
         person.setEmail(this.email);
         person.setAddress(this.address.getEntity());
-        person.setPhones(this.phones.stream().map(phoneDTO -> {
-            Phone phone = phoneDTO.getEntity();
-            phone.setPerson(person);
-            return phone;
-        }).collect(Collectors.toSet()));
-        person.setHobbies(this.hobbies.stream().map(HobbyDTO::getEntity).collect(Collectors.toSet()));
+        if (this.phones != null) {
+            person.setPhones(this.phones.stream().map(phoneDTO -> {
+                Phone phone = phoneDTO.getEntity();
+                phone.setPerson(person);
+                return phone;
+            }).collect(Collectors.toSet()));
+        }
+
+        if (this.hobbies != null) {
+            person.setHobbies(this.hobbies.stream().map(HobbyDTO::getEntity).collect(Collectors.toSet()));
+        }
+
 
         return person;
     }
